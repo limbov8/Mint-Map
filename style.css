@@ -1,0 +1,153 @@
+*{
+    box-sizing: border-box;
+}
+body { 
+    margin:0; 
+    padding:0; 
+}
+#mint_map_element{
+    margin:0; 
+    padding:0; 
+    width: 100%;
+    height: auto;
+    padding-top:80%;
+    min-width: 100px;
+    min-height: 100px;
+    position: relative;
+}
+#map {
+    position:absolute; 
+    top:0; 
+    bottom:0; 
+    width:100%;
+}
+.geocoder {
+    position:absolute;
+    z-index:1;
+    width:30%;
+    left:8%;
+    top:20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+.mapboxgl-ctrl-geocoder { 
+    min-width:100%; 
+}
+.layer-panel{
+    display: none
+}
+a{
+    text-decoration: none;
+}
+.settings {
+    width:100%;
+    min-height: 5%;
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+}
+.settings .variableTitle{
+
+}
+.settings h2{
+    font-size: 15px;
+    line-height: 1.5;
+}
+.settings h3{
+    font-size: 13px;
+    line-height: 1.5;
+}
+.settings h4{
+    font-size: 12px;
+    line-height: 1.5;
+}
+.settings a{
+    display: inline-block;
+    color: #222;
+    background-color: #eee;
+    letter-spacing: 2px;
+    font-size: 12px;
+    padding: 10px 30px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border: 1px solid rgba(0,0,0,0.3);
+    border-bottom-width: 3px;
+    margin: 2px 12px 2px 0;
+
+}
+.settings a.active{
+    background-color: #699DB6;
+    border-color: rgba(0,0,0,0.3);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+    color: #FFF;
+}
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.1s;
+    width: 100%;
+    padding:12px 12px 24px 12px;
+}
+.card input{
+    width:80%;
+    margin:auto;
+    display: block;
+}
+.card:hover {
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
+}
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #8cb8ce;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.sliderTime {
+    height: 15px;
+    border-radius: 5px;
+}
+
+.sliderTime::-webkit-slider-thumb {
+    height: 25px;
+    border-radius: 50%;
+}
+
+.sliderTime::-moz-range-thumb { 
+    height: 25px;
+    border-radius: 50%; 
+}
+::-webkit-scrollbar { 
+    display: none; 
+}
+.properties{
+    width: 100%;
+    padding: 12px 4px;
+    max-height: 60vh;
+    overflow-y: scroll;
+    padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+    box-sizing: content-box; /* So the width will be 100% + 17px */
+}
