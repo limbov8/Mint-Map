@@ -32,6 +32,7 @@
       <div id='map'></div>
       <div id='geocoder' class='geocoder'></div>
       <div id='layer-panel' class='layer-panel'></div>
+      <div id="map-legend" class="legend"></div>
     </div>
   </template>
 
@@ -83,12 +84,12 @@
       ready() {
         super.ready();
         this._setLoaded(window.mapboxgl && true);
-
       }
 
       connectedCallback() {
         super.connectedCallback();
         window.isMapLoaded = false;
+        window._polymerMap = this.$;
         this._setMapElement(this.$.map);
         Polymer.RenderStatus.afterNextRender(this, this._init);
       }
