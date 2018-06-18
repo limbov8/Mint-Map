@@ -187,7 +187,7 @@ window.loadMapLayers = function(mapboxgl){
         });
         map.addControl(window.__mapInspect);
 
-        fetch("/meta/metadata.json")
+        fetch("http://jonsnow.usc.edu:8081/mintmap/meta/metadata.json")
         .then(response => response.json())
         .then(json => {
             console.log('loaded');
@@ -414,7 +414,7 @@ window.loadMapLayers = function(mapboxgl){
             
             updatePropertiesSettingBy(curLayerName, false);
 
-            fetch("/meta/" + obj.id + ".json")
+            fetch("http://jonsnow.usc.edu:8081/mintmap/meta/" + obj.id + ".json")
             .then(response => response.json())
             .then(json => {
                 console.log(json);
