@@ -9,7 +9,7 @@
     margin:0; 
     padding:0; 
     width: 100%;
-    height: auto;
+    height: 100%;
     padding-top:80%;
     min-width: 100px;
     min-height: 100px;
@@ -32,7 +32,7 @@
 }
 .geocoder {
     position:absolute;
-    z-index:1;
+    z-index:0;
     width:30%;
     left:3%;
     top:20px;
@@ -249,6 +249,7 @@ a{
 .layerList .tag{
     display:block;
     padding-left:.6em;
+    cursor:pointer;
     padding-right:.6em;
     line-height:inherit;
     font-size:.9375em;

@@ -229,10 +229,10 @@ window.loadMapLayers = function(mapboxgl){
             tagul.className = 'tags-list';
             var tagSearch = document.createElement('li');
             tagSearch.setAttribute('id','the-li-of-add-new-layer');
-            tagSearch.innerHTML = "<a href='#' id='add-new-layer' class='tag function-tag' onclick='this.style.display=\"none\";document.getElementById(\"search-new-layer\").style.display=\"block\";document.getElementById(\"search-new-layer\").value=\"\";document.getElementById(\"search-new-layer\").focus();document.querySelector(\"#the-li-of-add-new-layer .awesomplete\").style.display = \"inline-block\";return false;'>Add New Layer</a><input id='search-new-layer' class='awesomplete' style='display:none' placeholder='Search new layers'>";
+            tagSearch.innerHTML = "<a id='add-new-layer' class='tag function-tag' onclick='this.style.display=\"none\";document.getElementById(\"search-new-layer\").style.display=\"block\";document.getElementById(\"search-new-layer\").value=\"\";document.getElementById(\"search-new-layer\").focus();document.querySelector(\"#the-li-of-add-new-layer .awesomplete\").style.display = \"inline-block\";return false;'>Add New Layer</a><input id='search-new-layer' class='awesomplete' style='display:none' placeholder='Search new layers'>";
 
             var tagShowAll = document.createElement('li');
-            tagShowAll.innerHTML = "<a href='#' id='show-all-layers' class='tag function-tag' data-show='no'>Show All Layers</a>";
+            tagShowAll.innerHTML = "<a id='show-all-layers' class='tag function-tag' data-show='no'>Show All Layers</a>";
 
             tagul.appendChild(tagSearch);
             tagul.appendChild(tagShowAll);
@@ -276,7 +276,7 @@ window.loadMapLayers = function(mapboxgl){
                     if (json.layerNames[i] == window.__defaultLayerName) { //This is default value need to be passed
                         loadLayerFromJson(json.layers[i]);
                         var newLayer = document.createElement('li');
-                        newLayer.innerHTML = "<a href='#' class='tag " + (json.hasData[i] ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+json.layerIds[i]+"' data-has-data='" + (json.hasData[i] ? "true":"false") + "' data-source-layer='" + json.sourceLayers[i] + "' data-file='"+(json.hasData[i] ? json.layers[i].file : "") +"'>" + json.layerNames[i] + "<div class='tag_close'></div></a>";
+                        newLayer.innerHTML = "<a class='tag " + (json.hasData[i] ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+json.layerIds[i]+"' data-has-data='" + (json.hasData[i] ? "true":"false") + "' data-source-layer='" + json.sourceLayers[i] + "' data-file='"+(json.hasData[i] ? json.layers[i].file : "") +"'>" + json.layerNames[i] + "<div class='tag_close'></div></a>";
                         tagul.insertBefore(newLayer, tagSearch);
                         // updatePropertiesSettingBy(window.__defaultLayerName + "Layer", false);
                     }
@@ -341,7 +341,7 @@ window.loadMapLayers = function(mapboxgl){
                 return false;
             }
             var newLayer = document.createElement('li');
-            newLayer.innerHTML = "<a href='#' class='tag " + (hasData ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+layerId+"' data-has-data='" + (hasData ? "true":"false") + "' data-source-layer='" + sourceLayer + "' data-file='"+ file +"'>" + layerName + "<div class='tag_close'></div></a>";
+            newLayer.innerHTML = "<a class='tag " + (hasData ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+layerId+"' data-has-data='" + (hasData ? "true":"false") + "' data-source-layer='" + sourceLayer + "' data-file='"+ file +"'>" + layerName + "<div class='tag_close'></div></a>";
             var tagul = _mintMapShadowRoot.querySelector('#the-ul-of-layer-list');
             var tagSearch = _mintMapShadowRoot.querySelector('#the-li-of-add-new-layer');
             tagul.insertBefore(newLayer, tagSearch);
@@ -503,7 +503,7 @@ window.loadMapLayers = function(mapboxgl){
             showAll.setAttribute('id','show-all-div');
             for (var i = 0; i < window.__listOfLayersNotAdded.length; i++) {
                 var newLayer = document.createElement('li');
-                newLayer.innerHTML = "<a href='#' class='tag " + (window.__listOfLayersNotAdded[i].hasData ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+ window.__listOfLayersNotAdded[i].id +"' data-has-data='" + (window.__listOfLayersNotAdded[i].hasData ? "true":"false") + "' data-source-layer='" + window.__listOfLayersNotAdded[i].source + "' data-file='"+ window.__listOfLayersNotAdded[i].file +"'>" + window.__listOfLayersNotAdded[i].value + "<div class='tag_close tag_add'></div></a>";
+                newLayer.innerHTML = "<a class='tag " + (window.__listOfLayersNotAdded[i].hasData ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+ window.__listOfLayersNotAdded[i].id +"' data-has-data='" + (window.__listOfLayersNotAdded[i].hasData ? "true":"false") + "' data-source-layer='" + window.__listOfLayersNotAdded[i].source + "' data-file='"+ window.__listOfLayersNotAdded[i].file +"'>" + window.__listOfLayersNotAdded[i].value + "<div class='tag_close tag_add'></div></a>";
                 showAll.appendChild(newLayer);
             }
             var clearBoth = document.createElement('div');
