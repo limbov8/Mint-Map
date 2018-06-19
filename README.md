@@ -10,10 +10,55 @@ Mint mapbox to show different layers
 ```
 $ polymer serve
 ```
+```html
+<dom-module id="mint-map-test-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h3>[[prop2]]</h3>
+    <mint-map variables="[[variables]]"></mint-map>
+  </template>
 
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class MintMapTestApp extends Polymer.Element {
+      static get is() { return 'mint-map-test-app'; }
+      static get properties() {
+        return {
+          variables: {
+            type: Array,
+            notify:true,
+            readOnly:false,
+            value:['landuse', 'soil']
+          }
+        };
+      }
+      ready() {
+        super.ready();
+        // mutate the array
+        setTimeout((function() {
+                  this.variables = ['elevation','soil'];
+                  // If readOnly
+                  // this._setVariables(['elevation','soil']);
+                }).bind(this), 3000);
+      } 
+    }
+
+    window.customElements.define(MintMapTestApp.is, MintMapTestApp);
+  </script>
+</dom-module>
+```
 ## Javascript
 
 Please read `render.js`.
+
+
 
 ```
 window._mintMap = {};
