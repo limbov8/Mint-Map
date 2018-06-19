@@ -20,11 +20,9 @@ window.loadMapLayers = function(mapboxgl){
         zoom: 5, // starting zoom
     });
 
-    function _onChangeVariables(variables) {
-        console.log(variables);
+    window._mintMap.onVariablesChanged = function (variables) {
+        console.log("variables",variables);
     }
-    
-    window._mintMap.onChangeVariables = _onChangeVariables.bind(this);
     /* given a query in the form "lng, lat" or "lat, lng" returns the matching
      * geographic coordinate(s) as search results in carmen geojson format,
      * https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
@@ -234,7 +232,7 @@ window.loadMapLayers = function(mapboxgl){
             tagul.className = 'tags-list';
             var tagSearch = document.createElement('li');
             tagSearch.setAttribute('id','the-li-of-add-new-layer');
-            tagSearch.innerHTML = "<a id='add-new-layer' class='tag function-tag' onclick='this.style.display=\"none\";document.getElementById(\"search-new-layer\").style.display=\"block\";document.getElementById(\"search-new-layer\").value=\"\";document.getElementById(\"search-new-layer\").focus();document.querySelector(\"#the-li-of-add-new-layer .awesomplete\").style.display = \"inline-block\";return false;'>Add New Layer</a><input id='search-new-layer' class='awesomplete' style='display:none' placeholder='Search new layers'>";
+            tagSearch.innerHTML = "<a id='add-new-layer' class='tag function-tag' onclick='this.style.display=\"none\";window._polymerMap.mint_map_element.querySelector(\"#search-new-layer\").style.display=\"block\";window._polymerMap.mint_map_element.querySelector(\"#search-new-layer\").value=\"\";window._polymerMap.mint_map_element.querySelector(\"#search-new-layer\").focus();window._polymerMap.mint_map_element.querySelector(\"#the-li-of-add-new-layer .awesomplete\").style.display = \"inline-block\";return false;'>Add New Layer</a><input id='search-new-layer' class='awesomplete' style='display:none' placeholder='Search new layers'>";
 
             var tagShowAll = document.createElement('li');
             tagShowAll.innerHTML = "<a id='show-all-layers' class='tag function-tag' data-show='no'>Show All Layers</a>";

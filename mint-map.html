@@ -87,7 +87,14 @@
         ];
       }
       _variablesChanged(newArr, oldArr) {
-          window._mintMap(newArr);
+        console.log("newArr",newArr);
+        if (newArr) {
+          if (typeof window._mintMap === 'object') {
+            if (typeof window._mintMap.onVariablesChanged === 'function') {
+              window._mintMap.onVariablesChanged(newArr);
+            }  
+          }
+        }
       }
 
       ready() {
