@@ -142,7 +142,7 @@
           },'mapbox');
         PolymerVis.insertCssIntoShadowRoot('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css', this.shadowRoot, null,'mapbox-geocoder');
         PolymerVis.insertCssIntoShadowRoot('../bower_components/mint-map/style.css', this.shadowRoot,null,'style');
-        this.resize();
+        // this.resize();
       }
       resize() {
         if (this.map) {
@@ -156,7 +156,8 @@
           window.loadMapLayers(window.mapboxgl);
         }
         if (!this.loaded || !this.accessToken) return;
-        if (this.map) return;
+        // if (this.map) return;
+        if (window.mapboxgl) return;
         this._mapDebouncer = Polymer.Debouncer.debounce(
           this._mapDebouncer,
           Polymer.Async.timeOut.after(this.debounceTime),
@@ -165,12 +166,12 @@
       }
 
       _createMap(){
-          var map = new mapboxgl.Map({
-            container: this.$.map,
-            style: 'mapbox://styles/mapbox/dark-v9'
-          });
-          this.map = map;
-          this.resize();
+          // var map = new mapboxgl.Map({
+          //   container: this.$.map,
+          //   style: 'mapbox://styles/mapbox/streets-v9'
+          // });
+          // this.map = map;
+          // this.resize();
       }
     }
 
