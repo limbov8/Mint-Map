@@ -86,7 +86,7 @@
           '_updateMap(loaded, accessToken)'
         ];
       }
-      
+
       _variablesChanged(newArr, oldArr) {
         if (newArr) {
           if (typeof window._mintMap === 'object' && (typeof window._mintMap.onVariablesChanged === 'function')) {
@@ -170,6 +170,7 @@
             style: 'mapbox://styles/mapbox/dark-v9'
           });
           this.map = map;
+          this.resize();
       }
     }
 
