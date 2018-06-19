@@ -104,7 +104,7 @@
 
       connectedCallback() {
         super.connectedCallback();
-        window.isMapLoaded = false;
+        window._isMapLoaded = false;
         window._polymerMap = this.$;
         this._setMapElement(this.$.map);
         Polymer.RenderStatus.afterNextRender(this, this._init);
@@ -151,8 +151,7 @@
         return this;
       }
       _updateMap() {
-        if (window.loadMapLayers && !window.isMapLoaded) {
-          // console.log('hi');
+        if (window.loadMapLayers && !window._isMapLoaded) {
           window.loadMapLayers(window.mapboxgl);
         }
         if (!this.loaded || !this.accessToken) return;
@@ -161,7 +160,7 @@
         this._mapDebouncer = Polymer.Debouncer.debounce(
           this._mapDebouncer,
           Polymer.Async.timeOut.after(this.debounceTime),
-          this._createMap.bind(this)
+          // this._createMap.bind(this)
         );
       }
 
