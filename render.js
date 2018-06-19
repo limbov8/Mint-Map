@@ -20,6 +20,11 @@ window.loadMapLayers = function(mapboxgl){
         zoom: 5, // starting zoom
     });
 
+    function _onChangeVariables(variables) {
+        console.log(variables);
+    }
+    
+    window._mintMap.onChangeVariables = _onChangeVariables.bind(this);
     /* given a query in the form "lng, lat" or "lat, lng" returns the matching
      * geographic coordinate(s) as search results in carmen geojson format,
      * https://github.com/mapbox/carmen/blob/master/carmen-geojson.md

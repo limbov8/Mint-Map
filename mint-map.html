@@ -49,6 +49,11 @@
       static get is() { return 'mint-map'; }
       static get properties() {
         return {
+          variables: {
+            type: Array,
+            observer: '_variablesChanged',
+            value: []
+          },
           loaded: {
             type: Boolean,
             notify: true,
@@ -76,11 +81,15 @@
           },
         };
       }
-     static get observers() {
+      static get observers() {
         return [
           '_updateMap(loaded, accessToken)'
         ];
       }
+      _variablesChanged(newArr, oldArr) {
+          window._mintMap(newArr);
+      }
+
       ready() {
         super.ready();
         this._setLoaded(window.mapboxgl && true);
