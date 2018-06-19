@@ -197,7 +197,7 @@ window.loadMapLayers = function(mapboxgl){
         fetch("http://jonsnow.usc.edu:8081/mintmap/meta/metadata.json")
         .then(response => response.json())
         .then(json => {
-            console.log('loaded');
+            // console.log('loaded');
             // var layersIds = [];
             // var layerNames = [];
             // var layerIdSource = {};
@@ -310,7 +310,7 @@ window.loadMapLayers = function(mapboxgl){
                 autoFirst:true
             });
             Awesomplete.$.bind(searchNewLayer, { "awesomplete-selectcomplete": function (event) {
-                console.log(event);
+                // console.log(event);
                 var name = event.text.value;
                 var idx = json.layerNames.indexOf(name);
                 if (idx != -1) {
@@ -424,7 +424,7 @@ window.loadMapLayers = function(mapboxgl){
             fetch("http://jonsnow.usc.edu:8081/mintmap/meta/" + obj.id + ".json")
             .then(response => response.json())
             .then(json => {
-                console.log(json);
+                // console.log(json);
                 map.setPaintProperty(curLayerName, 'fill-color', JSON.parse(json.colormap));
                 // map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
                 updateLegend(json['legend-type'],JSON.parse(json.legend));
@@ -551,7 +551,7 @@ window.loadMapLayers = function(mapboxgl){
                     updateListOfLayersNotAdded({layerName:tag.text, layerId: tag.getAttribute('data-layer-id'), hasData: tag.getAttribute('data-has-data') == "true" ? true : false, sourceLayer:tag.getAttribute('data-source-layer'), file:tag.getAttribute('data-file')},false)
                     updateShowAllDiv(false);
                 }else{
-                    console.log(e.target);
+                    // console.log(e.target);
 
                     var tag = e.target.parentElement;
                     // var newLayer = document.createElement('li');
