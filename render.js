@@ -20,13 +20,13 @@ window.loadMapLayers = function(mapboxgl){
         zoom: 5, // starting zoom
     });
     
+    window._mintMap.onVariablesChanged = function (variables) {
+        console.log("variables",variables);
+    }   
     if (typeof window._mintMapOnloadVars === 'object') {
         window._mintMap.onVariablesChanged(window._mintMapOnloadVars);
     }
-    
-    window._mintMap.onVariablesChanged = function (variables) {
-        console.log("variables",variables);
-    }
+
     /* given a query in the form "lng, lat" or "lat, lng" returns the matching
      * geographic coordinate(s) as search results in carmen geojson format,
      * https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
@@ -540,7 +540,7 @@ window.loadMapLayers = function(mapboxgl){
             }
             
         }
-        document.addEventListener("click", function (e) {
+        _mintMapShadowRoot.addEventListener("click", function (e) {
             e.stopPropagation();
             if (e.target.classList.contains('tag_close')) {
                 if (!e.target.classList.contains('tag_add')) {
