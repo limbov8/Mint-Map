@@ -89,10 +89,10 @@
       _variablesChanged(newArr, oldArr) {
         console.log("newArr",newArr);
         if (newArr) {
-          if (typeof window._mintMap === 'object') {
-            if (typeof window._mintMap.onVariablesChanged === 'function') {
+          if (typeof window._mintMap === 'object' && (typeof window._mintMap.onVariablesChanged === 'function')) {
               window._mintMap.onVariablesChanged(newArr);
-            }  
+          }else{
+            window._mintMapOnloadVars = newArr;
           }
         }
       }
