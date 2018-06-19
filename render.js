@@ -20,10 +20,11 @@
             center: [26.3,7.6],
             zoom: 5, // starting zoom
         });
-        
+        map.resize();
+        window._isMapLoaded = true;
         window._mintMap.onVariablesChanged = function (variables) {
             console.log("variables",variables);
-        }   
+        }
         if (typeof window._mintMapOnloadVars === 'object') {
             window._mintMap.onVariablesChanged(window._mintMapOnloadVars);
         }
