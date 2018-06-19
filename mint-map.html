@@ -88,7 +88,7 @@
       }
 
       _variablesChanged(newArr, oldArr) {
-        if (newArr) {
+        if (!newArr.equals(oldArr)) {
           if (typeof window._mintMap === 'object' && (typeof window._mintMap.onVariablesChanged === 'function')) {
               window._mintMap.onVariablesChanged(newArr);
           }else{
@@ -104,6 +104,31 @@
 
       connectedCallback() {
         super.connectedCallback();
+        Array.prototype.equals = function (array) {
+            // if the other array is a falsy value, return
+            if (!array)
+                return false;
+
+            // compare lengths - can save a lot of time 
+            if (this.length != array.length)
+                return false;
+
+            for (var i = 0, l=this.length; i < l; i++) {
+                // Check if we have nested arrays
+                if (this[i] instanceof Array && array[i] instanceof Array) {
+                    // recurse into the nested arrays
+                    if (!this[i].equals(array[i]))
+                        return false;       
+                }           
+                else if (this[i] != array[i]) { 
+                    // Warning - two different object instances will never be equal: {x:20} != {x:20}
+                    return false;   
+                }           
+            }       
+            return true;
+        }
+        // Hide method from for-in loops
+        Object.defineProperty(Array.prototype, "equals", {enumerable: false});
         window._isMapLoaded = false;
         window._polymerMap = this.$;
         this._setMapElement(this.$.map);
