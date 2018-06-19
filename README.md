@@ -3,7 +3,7 @@
 Mint mapbox to show different layers
 
 ![Published by Libo Liu](https://img.shields.io/badge/Libo%20Liu-Contributor-blue.svg)
-![Contributor by Shiwei Huang](https://img.shields.io/badge/Shiwei%20Huang-Contributor-blue.svg)
+![Contributor by Varun Ratnakar](https://img.shields.io/badge/Varun%20Ratnakar-Contributor-blue.svg)
 
 ## Viewing Your Element
 
