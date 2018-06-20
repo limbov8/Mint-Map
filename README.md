@@ -10,11 +10,10 @@ Mint mapbox to show different layers
 ## Viewing Your Element
 
 ```shell
-cd demo
 polymer serve
 ```
 
-More info in the `demo/src/mint-map-test-app`
+More info in the `demo/mint-map-test-app.html`
 
 ### Polymer installation
 

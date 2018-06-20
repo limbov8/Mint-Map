@@ -15,15 +15,6 @@
     min-height: 100px;
     position: relative;
 }
-.element{
-    margin:0;
-    padding:0;
-    width: 100vw;
-    height: 100vh;
-    min-width: 100px;
-    min-height: 100px;
-    position: relative;
-}
 #map {
     position:absolute;
     top:0;

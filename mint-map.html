@@ -159,7 +159,7 @@
             "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js"
           );
           PolymerVis.loadScript(
-            "../bower_components/mint-map/render.js"
+            this.resolveUrl("./render.js")
           );
         }
 
@@ -168,7 +168,7 @@
             this._setLoaded(this._scriptLoaded && this._cssLoaded);
           },'mapbox');
         PolymerVis.insertCssIntoShadowRoot('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css', this.shadowRoot, null,'mapbox-geocoder');
-        PolymerVis.insertCssIntoShadowRoot('../bower_components/mint-map/style.css', this.shadowRoot,null,'style');
+        PolymerVis.insertCssIntoShadowRoot(this.resolveUrl('./style.css'), this.shadowRoot,null,'style');
         // this.resize();
       }
       resize() {

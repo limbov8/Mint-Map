@@ -20,7 +20,9 @@
             center: [26.3,7.6],
             zoom: 5, // starting zoom
         });
+        window._mintMap.map = map;
         map.resize();
+
         window._isMapLoaded = true;
         window._mintMap.onVariablesChanged = function (variables) {
             console.log("variables",variables);
@@ -656,6 +658,7 @@
                 // e.lngLat is the longitude, latitude geographical position of the event
                 // JSON.stringify(e.lngLat));
         });
+
     }
     
 }();
