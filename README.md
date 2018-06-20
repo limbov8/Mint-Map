@@ -6,55 +6,23 @@ Mint mapbox to show different layers
 ![Contributor by Varun Ratnakar](https://img.shields.io/badge/Varun%20Ratnakar-Contributor-blue.svg)
 ![Contributor by Shiwei Huang](https://img.shields.io/badge/Shiwei%20Huang-Bower%20Install-blue.svg)
 
+
 ## Viewing Your Element
 
+```shell
+cd demo
+polymer serve
 ```
-$ polymer serve
-```
-```html
-<dom-module id="mint-map-test-app">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <h3>[[prop2]]</h3>
-    <mint-map variables="[[variables]]"></mint-map>
-  </template>
 
-  <script>
-    /**
-     * @customElement
-     * @polymer
-     */
-    class MintMapTestApp extends Polymer.Element {
-      static get is() { return 'mint-map-test-app'; }
-      static get properties() {
-        return {
-          variables: {
-            type: Array,
-            notify:true,
-            readOnly:false,
-            value:['landuse', 'soil']
-          }
-        };
-      }
-      ready() {
-        super.ready();
-        // mutate the array
-        setTimeout((function() {
-                  this.variables = ['elevation','soil'];
-                  // If readOnly
-                  // this._setVariables(['elevation','soil']);
-                }).bind(this), 3000);
-      } 
-    }
+More info in the `demo/src/mint-map-test-app`
 
-    window.customElements.define(MintMapTestApp.is, MintMapTestApp);
-  </script>
-</dom-module>
+### Polymer installation
+
+```shell
+npm install -g polymer-cli
 ```
+
+
 ## Javascript
 
 Please read `render.js`.
