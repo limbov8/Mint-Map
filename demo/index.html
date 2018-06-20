@@ -4,27 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>mint-map demo</title>
+    <title>mint-map-test</title>
+    <meta name="description" content="Test for mint-map">
 
-    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+    <!-- See https://goo.gl/OOhYW5 -->
+    <link rel="manifest" href="/manifest.json">
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../mint-map.html">
+    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
-    </custom-style>
+    <link rel="import" href="/src/mint-map-test-app/mint-map-test-app.html">
   </head>
   <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic mint-map demo</h3>
-      <demo-snippet>
-        <template>
-          <mint-map></mint-map>
-        </template>
-      </demo-snippet>
-    </div>
+    <mint-map-test-app></mint-map-test-app>
   </body>
 </html>

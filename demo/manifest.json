@@ -1,0 +1,7 @@
+{
+  "name": "mint-map-test",
+  "short_name": "mint-map-test",
+  "description": "Test for mint-map",
+  "start_url": "/",
+  "display": "standalone"
+}
