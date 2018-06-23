@@ -4,8 +4,55 @@
 !function(){
     window.loadMapLayers = function(mapboxgl){
 
-        window._mintMap = {};
-        window.__defaultLayerName = 'Landuse';
+        window._mintMap = {displayed:[], metadata: []};
+        // Use proxy to observe the change of displayed layer name
+        const _initLayersGoing2DisplayArray = [];
+		const handler1 = {
+		  set(target, key, value) {
+		    console.log(`Setting value ${key} as ${value}`);
+		    // console.log(target);
+		    // set up to display when length is changed
+		    if (key === 'length') {
+		    	// traversal current displayed 
+		    	// remove source/layer not in
+		    	// add all
+
+		    }
+		    return Reflect.set(...arguments);
+		  },
+		};
+		const handler2 = {
+			set(target, key, value) {
+				console.log(`Setting value ${key} as ${value}`);
+				if (key === 'metadata') {
+					if (_initLayersGoing2DisplayArray.length === 0) {
+						for (var i = 0; i < _initLayersGoing2DisplayArray.length; i++) {
+							if (!("layerMD5" in value)) {
+								if (!("layerMD5" in _mintMap.metadata)) {
+									break;
+								}else{
+									value = _mintMap.metadat;
+								}
+							}
+							let md5idx = value.layerMD5.indexOf(_initLayersGoing2DisplayArray[i]);
+							if (md5idx === -1) {
+								continue;
+							}
+							addNewLayerToMap(value.hasData[md5idx], 
+								value.layerIds[md5idx], 
+								value.layerNames[md5idx], 
+								value.sourceLayers[md5idx], 
+								"file");
+						}
+					}
+				}
+				return Reflect.set(...arguments);
+			}
+		}
+		const initLayersGoing2DisplayArray = new Proxy(_initLayersGoing2DisplayArray, handler1);
+		const mintMapObserver = new Proxy(window._mintMap, handler2);
+        // window.__defaultLayerName = 'Landuse';
+        // window.__defaultLayerMD5 = '';
         mapboxgl.accessToken = 'pk.eyJ1IjoibGlib2xpdSIsImEiOiJjamZ1cXc1cGIwNHlhMnhsYWx0amRrbmdrIn0.d2s82GJZj56n2QUN2WGNsA';
 
         let __theBounds = [22.4, 3.4, 37.0, 23.2];
@@ -25,7 +72,35 @@
 
         window._isMapLoaded = true;
         window._mintMap.onVariablesChanged = function (variables) {
-            console.log("variables",variables);
+        	if (!Array.isArray(variables)) {
+        		console.log("Variables should be an array")
+        		return false;
+        	}
+        	if (variables.length === 0) {
+        		console.log("Variables is empty")
+        		return false;
+        	}
+        	let isValid = true;
+        	variables.forEach(function (idx, ele) {
+	       		if (typeof ele !== "object") {
+	        		isValid = false; 
+	        	}else{
+	        		if (!('md5' in ele)) {
+	        			isValid = false;        	
+	        		}
+	        	}
+        	});
+        	if (!isValid) {
+        		console.log("Items in variables should be an object with format like {name: 'landuse', stdname: 'landuse-standard-name', md5: 'the-md5-hash-from-data-catalog', uri: 'the-uri-from-data-catalog'}")
+        		return false;
+        	}
+        	Object.assign(initLayersGoing2DisplayArray,[]);
+        	variables.forEach(function (idx, ele) {
+        		initLayersGoing2DisplayArray.push(ele);
+        	});
+
+            // window.__defaultLayerMD5 = variables[0].md5;
+            // console.log("variables",variables);
         }
         if (typeof window._mintMapOnloadVars === 'object') {
             window._mintMap.onVariablesChanged(window._mintMapOnloadVars);
@@ -214,7 +289,8 @@
                     // layerIdSource[json.layerIds[i]] = json.sourceLayers[i];
                     // layerIdName[json.layerIds[i]] = json.sourceNames[i];
                 // }
-                window.__originalDataset = JSON.parse(json.originalDataset);
+                mintMapObserver.metadata = JSON.parse(json.originalDataset);
+
                 var server = json.server;
                 var tile_path = json.tiles;
                 
@@ -262,37 +338,6 @@
                 _mintMapShadowRoot.querySelector('.geocoder').appendChild(geocoder.onAdd(map));
                 _mintMapShadowRoot.querySelector('.geocoder').appendChild(layers);
 
-
-                for (var i = 0; i < json.hasData.length; i++) {
-                    if (json.hasData[i]) {
-                        var layers = json.layers.filter(function (obj) {
-                            return obj.id == json.layerIds[i];
-                        });
-                        if("server" in layers[0])
-                            server = layers[0].server;
-
-                        var identifier = layers[0].id;
-
-                        map.addSource(json.sourceLayers[i],{
-                            type: 'vector',
-                            tiles: [server + md5(identifier) + tile_path + '.pbf']
-                        });
-                        // Start raster layer
-                        rasterLayerId = identifier.replace('vector_pbf','raster_png');
-                        map.addSource(rasterLayerId, {
-                            type: 'raster',
-                            tiles: [server + md5(rasterLayerId) + tile_path + '.png'],
-                            bounds: __theBounds
-                        }); 
-                        if (json.layerNames[i] == window.__defaultLayerName) { //This is default value need to be passed
-                            loadLayerFromJson(json.layers[i]);
-                            var newLayer = document.createElement('li');
-                            newLayer.innerHTML = "<a class='tag " + (json.hasData[i] ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+json.layerIds[i]+"' data-has-data='" + (json.hasData[i] ? "true":"false") + "' data-source-layer='" + json.sourceLayers[i] + "' data-file='"+(json.hasData[i] ? json.layers[i].file : "") +"'>" + json.layerNames[i] + "<div class='tag_close'></div></a>";
-                            tagul.insertBefore(newLayer, tagSearch);
-                            // updatePropertiesSettingBy(window.__defaultLayerName + "Layer", false);
-                        }
-                    }
-                }
                 
                 window.__listOfLayersNotAdded=[];
 
@@ -300,9 +345,9 @@
                     if (!json.hasData[i]) {
                         window.__listOfLayersNotAdded.push({label:json.layerNames[i] + " (No data)", value: json.layerNames[i], id: json.layerIds[i], hasData: json.hasData[i], source: json.sourceLayers[i], file:""});    
                     }else{
-                        if (json.layerNames[i] != window.__defaultLayerName) {
-                            window.__listOfLayersNotAdded.push({label:json.layerNames[i], value: json.layerNames[i], id: json.layerIds[i], hasData: json.hasData[i], source: json.sourceLayers[i], file: json.layers[i].file});
-                        }
+                        // if (json.layerNames[i] != window.__defaultLayerName) {
+                        //     window.__listOfLayersNotAdded.push({label:json.layerNames[i], value: json.layerNames[i], id: json.layerIds[i], hasData: json.hasData[i], source: json.sourceLayers[i], file: json.layers[i].file});
+                        // }
                     }
                 }
 
@@ -356,7 +401,7 @@
                 var tagul = _mintMapShadowRoot.querySelector('#the-ul-of-layer-list');
                 var tagSearch = _mintMapShadowRoot.querySelector('#the-li-of-add-new-layer');
                 tagul.insertBefore(newLayer, tagSearch);
-                loadLayerFromJson({'id':layerId, 'source-layer':sourceLayer,file:file});
+                loadLayerFromJson({'id':layerId, layerName:layerName,'source-layer':sourceLayer,file:file});
 
                 return true;
 
@@ -396,6 +441,34 @@
             }
             function loadLayerFromJson(obj) {
                 var curLayerName = obj['source-layer'] + "Layer";
+                let slpos = window.metadata.sourceLayers.indexOf(obj['source-layer']);
+                if (slpos === -1) {
+                	return ;
+                }
+
+            	if (!window.metadata.hasData[slpos]) {
+            		return;
+            	}
+        		let lid = window.metadata.layerIds[slpos];
+        		let layer = json.layers.filter(function (obj) {
+                    return obj.id == lid;
+                });
+        		if("server" in layers[0])
+                    server = layers[0].server;
+                var identifier = layers[0].id;
+
+                map.addSource(json.sourceLayers[i],{
+                    type: 'vector',
+                    tiles: [server + md5(identifier) + tile_path + '.pbf']
+                });
+                // Start raster layer
+                rasterLayerId = identifier.replace('vector_pbf','raster_png');
+                map.addSource(rasterLayerId, {
+                    type: 'raster',
+                    tiles: [server + md5(rasterLayerId) + tile_path + '.png'],
+                    bounds: __theBounds
+                });         
+                
                 map.addLayer({
                     "id":curLayerName + "_raster",
                     "type": 'raster',
@@ -420,7 +493,11 @@
                         "fill-opacity": 0.0
                     }
                 });
-
+                updateListOfLayersNotAdded({layerName: obj.layerName, 
+                	layerId: obj.id, 
+                	hasData: true,
+                	sourceLayer:obj['source-layer'], 
+                	file:"ckan"},false)
                 updateInspectLayers(curLayerName);
                 
                 updatePropertiesSettingBy(curLayerName, false);
@@ -473,8 +550,8 @@
                 }
             }
             function drawOriginalBound(coordinates, id="") {
-                // window.__originalDataset
-                window.__originalDataset.features[0].geometry.coordinates = coordinates;
+                // window._mintMap.metadata
+                window._mintMap.metadata.features[0].geometry.coordinates = coordinates;
                 var layers = map.getStyle().layers;
                 // Find the index of the first symbol layer in the map style
                 var firstSymbolId;
@@ -492,7 +569,7 @@
                     'type': 'line',
                     'source': {
                         'type': 'geojson',
-                        'data': window.__originalDataset
+                        'data': window._mintMap.metadata
                     },
                     'layout': {},
                     'paint': {
