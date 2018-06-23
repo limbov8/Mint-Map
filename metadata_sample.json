@@ -1,0 +1,93 @@
+{
+    "server": "http://jonsnow.usc.edu:8082/data/",
+    "tiles": "/{z}/{x}/{y}",
+    "originalDataset": "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"properties\":{\"stroke\":\"#000000\",\"stroke-width\":3,\"stroke-opacity\":1,\"fill\":\"#555555\",\"fill-opacity\":0.3},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[]}}]}",
+    "layerNames": [
+        "Elevation",
+        "Landuse",
+        "Soil",
+        "Precipitation"
+    ],
+    "layerIds": [
+        "evap_vector_pbf",
+        "landuse_vector_pbf",
+        "soil_vector_pbf",
+        "precipitation_vector_pbf"
+    ],
+    "sourceLayers": [
+        "evap",
+        "landuse",
+        "soil",
+        "precipitation"
+    ],
+    "hasData": [
+        true,
+        true,
+        true,
+        true,
+    ],
+    "hasTimeline": [
+        true,
+        false,
+        false,
+        false
+    ],
+    "vectorMD5":[
+        "evap_vector_pbf",
+        "f0ecaaa8d47cbbc391a5c1a807b2eca3",
+        "4275a535a7c2612dfd5162092821d507",
+        "594f8555a2ae43a5e8c566bed938afe6"
+    ],
+    "rasterMD5":[
+        "evap_raster_png",
+        "f00074d3934f35f32a48cbf22bb11c48",
+        "83b6c740143c2b418a588ac458e7bf2b",
+        "b860737163802cae5b22cbc9f14e3cea"
+    ],
+    "layers": [
+        {
+            "id": "evap_vector_pbf",
+            "source-layer": "evap",
+            "minzoom": 14,
+            "maxzoom": 3,
+            "type": "vector",
+            "mapping": "",
+            "startTime": "",
+            "endtime": "",
+            "directory_format": ""
+        },
+        {
+            "id": "landuse_vector_pbf",
+            "source-layer": "landuse",
+            "minzoom": 14,
+            "maxzoom": 3,
+            "type": "vector",
+            "mapping": "",
+            "startTime": "",
+            "endtime": "",
+            "directory_format": ""
+        },
+        {
+            "id": "soil_vector_pbf",
+            "source-layer": "soil",
+            "minzoom": 14,
+            "maxzoom": 3,
+            "type": "vector",
+            "mapping": "",
+            "startTime": "",
+            "endtime": "",
+            "directory_format": ""
+        },
+        {
+            "id": "precipitation_vector_pbf",
+            "source-layer": "precipitation",
+            "minzoom": 14,
+            "maxzoom": 3,
+            "type": "vector",
+            "mapping": "",
+            "startTime": "",
+            "endtime": "",
+            "directory_format": ""
+        }
+    ]
+}

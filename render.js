@@ -16,7 +16,7 @@
 		    	// traversal current displayed 
 		    	// remove source/layer not in
 		    	// add all
-
+		    	handle_variable();
 		    }
 		    return Reflect.set(...arguments);
 		  },
@@ -25,25 +25,8 @@
 			set(target, key, value) {
 				console.log(`Setting value ${key} as ${value}`);
 				if (key === 'metadata') {
-					if (_initLayersGoing2DisplayArray.length === 0) {
-						for (var i = 0; i < _initLayersGoing2DisplayArray.length; i++) {
-							if (!("layerMD5" in value)) {
-								if (!("layerMD5" in _mintMap.metadata)) {
-									break;
-								}else{
-									value = _mintMap.metadat;
-								}
-							}
-							let md5idx = value.layerMD5.indexOf(_initLayersGoing2DisplayArray[i]);
-							if (md5idx === -1) {
-								continue;
-							}
-							addNewLayerToMap(value.hasData[md5idx], 
-								value.layerIds[md5idx], 
-								value.layerNames[md5idx], 
-								value.sourceLayers[md5idx], 
-								"file");
-						}
+					if (_initLayersGoing2DisplayArray.length !== 0) {
+
 					}
 				}
 				return Reflect.set(...arguments);
@@ -54,7 +37,6 @@
         // window.__defaultLayerName = 'Landuse';
         // window.__defaultLayerMD5 = '';
         mapboxgl.accessToken = 'pk.eyJ1IjoibGlib2xpdSIsImEiOiJjamZ1cXc1cGIwNHlhMnhsYWx0amRrbmdrIn0.d2s82GJZj56n2QUN2WGNsA';
-
         let __theBounds = [22.4, 3.4, 37.0, 23.2];
 
         // liboliu.716mmt4v
@@ -105,7 +87,30 @@
         if (typeof window._mintMapOnloadVars === 'object') {
             window._mintMap.onVariablesChanged(window._mintMapOnloadVars);
         }
-
+        function handle_variable() {
+        	let value = window._mintMap.metadata;
+			for (var i = 0; i < _initLayersGoing2DisplayArray.length; i++) {
+				if (!("vectorMD5" in value)) {
+					if (!("vectorMD5" in _mintMap.metadata)) {
+						break;
+					}else{
+						value = _mintMap.metadata;
+					}
+				}
+				let md5idx = value.vectorMD5.indexOf(_initLayersGoing2DisplayArray[i].md5);
+				if (md5idx === -1) {
+					continue;
+				}
+				if (hasLayerNameDisplayed(value.layerNames[md5idx])) {
+					continue;
+				}
+				addNewLayerToMap(value.hasData[md5idx], 
+					value.layerIds[md5idx], 
+					value.layerNames[md5idx], 
+					value.sourceLayers[md5idx], 
+					"file");
+			}
+        }
         /* given a query in the form "lng, lat" or "lat, lng" returns the matching
          * geographic coordinate(s) as search results in carmen geojson format,
          * https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
@@ -346,7 +351,7 @@
                         window.__listOfLayersNotAdded.push({label:json.layerNames[i] + " (No data)", value: json.layerNames[i], id: json.layerIds[i], hasData: json.hasData[i], source: json.sourceLayers[i], file:""});    
                     }else{
                         // if (json.layerNames[i] != window.__defaultLayerName) {
-                        //     window.__listOfLayersNotAdded.push({label:json.layerNames[i], value: json.layerNames[i], id: json.layerIds[i], hasData: json.hasData[i], source: json.sourceLayers[i], file: json.layers[i].file});
+                        window.__listOfLayersNotAdded.push({label:json.layerNames[i], value: json.layerNames[i], id: json.layerIds[i], hasData: json.hasData[i], source: json.sourceLayers[i], file: json.layers[i].file});
                         // }
                     }
                 }
@@ -455,17 +460,19 @@
                 });
         		if("server" in layers[0])
                     server = layers[0].server;
-                var identifier = layers[0].id;
-
+                var identifier = window._mintMap.metadata.layerIds.indexOf(layers[0].id);
+                let vectorMD5 = window._mintMap.metadata.vectorMD5[identifier];
+                let rasterMD5 = window._mintMap.metadata.rasterMD5[identifier];
+                
                 map.addSource(json.sourceLayers[i],{
                     type: 'vector',
-                    tiles: [server + md5(identifier) + tile_path + '.pbf']
+                    tiles: [server + vectorMD5 + tile_path + '.pbf']
                 });
                 // Start raster layer
                 rasterLayerId = identifier.replace('vector_pbf','raster_png');
                 map.addSource(rasterLayerId, {
                     type: 'raster',
-                    tiles: [server + md5(rasterLayerId) + tile_path + '.png'],
+                    tiles: [server + rasterMD5 + tile_path + '.png'],
                     bounds: __theBounds
                 });         
                 
@@ -497,7 +504,7 @@
                 	layerId: obj.id, 
                 	hasData: true,
                 	sourceLayer:obj['source-layer'], 
-                	file:"ckan"},false)
+                	file:"ckan"},false);
                 updateInspectLayers(curLayerName);
                 
                 updatePropertiesSettingBy(curLayerName, false);
@@ -603,6 +610,15 @@
                 }
                 _mintMapShadowRoot.querySelector('#theTagList').appendChild(showAll);
                 
+            }
+            function hasLayerNameDisplayed(layerName) {
+				let temp = window.__listOfLayersNotAdded.filter(function (obj) {
+                    return obj.value === layerName;
+                });
+                if (temp.length > 0) {
+                	return true;
+                }
+                return false;
             }
             function updateListOfLayersNotAdded(json,removeFromList = true) {
                 if (removeFromList) {
