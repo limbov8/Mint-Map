@@ -63,7 +63,7 @@
         		return false;
         	}
         	let isValid = true;
-        	variables.forEach(function (idx, ele) {
+        	variables.forEach(function ( ele, idx) {
 	       		if (typeof ele !== "object") {
 	        		isValid = false; 
 	        	}else{
@@ -77,7 +77,7 @@
         		return false;
         	}
         	Object.assign(initLayersGoing2DisplayArray,[]);
-        	variables.forEach(function (idx, ele) {
+        	variables.forEach(function (ele, idx) {
         		initLayersGoing2DisplayArray.push(ele);
         	});
 
