@@ -294,7 +294,8 @@
                     // layerIdSource[json.layerIds[i]] = json.sourceLayers[i];
                     // layerIdName[json.layerIds[i]] = json.sourceNames[i];
                 // }
-                mintMapObserver.metadata = JSON.parse(json.originalDataset);
+                console.log(json);
+                mintMapObserver.metadata = json;
 
                 var server = json.server;
                 var tile_path = json.tiles;
