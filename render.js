@@ -317,9 +317,10 @@
 
                 var collapse = document.createElement('div');
                 collapse.className = "collapse-control";
-                collapse.innerHTML = "slideToggle";
+                collapse.innerHTML = "";
                 collapse.onclick = function (e) {
                     window._mintMap.toggleClass(_mintMapShadowRoot.querySelector('.settings'), 'slideDown');
+                    window._polymerMap.mint_map_element.querySelector('.settings').scrollTo(0,0)
                 }
                 layers.appendChild(collapse);
 
@@ -698,7 +699,7 @@
             for (var i = 0; i < window._mintMap.listOfLayersNotAdded.length; i++) {
                 let alreadyDisplayed = tagul.querySelector("[data-layer-id="+window._mintMap.listOfLayersNotAdded[i].id+"]");
                 if (alreadyDisplayed) {
-                    alreadyDisplayed.remove();
+                    alreadyDisplayed.parentNode.remove();
                 }
             }
             if (!isClick && showAllLayers.getAttribute('data-show') == 'no') {
