@@ -749,7 +749,7 @@
                     window._mintMap.listOfLayersNotAdded.unshift({label:json.layerName, value: json.layerName, id: json.layerId, hasData: json.hasData, source: json.sourceLayer, file:json.file});
                 }
             }
-            
+            window._mintMap.autocomplete.list = window._mintMap.listOfLayersNotAdded;
         }
         _mintMapShadowRoot.addEventListener("click", function (e) {
             e.stopPropagation();
