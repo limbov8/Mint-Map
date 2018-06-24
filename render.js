@@ -9,7 +9,7 @@
         // window._mintMap.listOfLayersNotAdded=[];
         const handler1 = {
           set(target, key, value) {
-            console.log(`handler1 Setting value ${key} as ${value}`);
+            // console.log(`handler1 Setting value ${key} as ${value}`);
             // console.log(target);
             // set up to display when length is changed
             target[key] = value;
@@ -309,7 +309,7 @@
                     // layerIdSource[json.layerIds[i]] = json.sourceLayers[i];
                     // layerIdName[json.layerIds[i]] = json.sourceNames[i];
                 // }
-                console.log(json);
+                // console.log(json);
                 mintMapObserver.metadata = json;                
                         
                 var layers = document.createElement('div');
@@ -441,7 +441,7 @@
                         sourceLayer: sourceLayer, 
                         file:"ckan"},
                     false);
-                    console.log(sourceLayer,{layerName:window._mintMap.getLayerNameBySoureLayer(sourceLayer)},window._mintMap.listOfLayersNotAdded);
+                    // console.log(sourceLayer,{layerName:window._mintMap.getLayerNameBySoureLayer(sourceLayer)},window._mintMap.listOfLayersNotAdded);
 
                     updateShowAllDiv(false);
                     idxToBeRemoved.push(idx);
