@@ -58,7 +58,7 @@
 
         // liboliu.716mmt4v
         var _mintMapShadowRoot = window._polymerMap.mint_map_element;
-        
+        _mintMapShadowRoot.style.height = _mintMapShadowRoot.parentNode.host.clientHeight + "px";
         var map = new mapboxgl.Map({
             container: _mintMapShadowRoot.querySelector('#map'), // container id
             style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
