@@ -201,6 +201,7 @@
                       typeof value === 'string') return value.toString();
               return value;
             },
+            
             getMode: function (array) {
                 if(array.length == 0)
                     return null;

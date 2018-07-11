@@ -33,13 +33,13 @@
         false
     ],
     "vectorMD5":[
-        "evap_vector_pbf",
+        null,
         "f0ecaaa8d47cbbc391a5c1a807b2eca3",
         "4275a535a7c2612dfd5162092821d507",
         "594f8555a2ae43a5e8c566bed938afe6"
     ],
     "rasterMD5":[
-        "evap_raster_png",
+        null,
         "f00074d3934f35f32a48cbf22bb11c48",
         "83b6c740143c2b418a588ac458e7bf2b",
         "b860737163802cae5b22cbc9f14e3cea"
@@ -51,10 +51,14 @@
             "minzoom": 14,
             "maxzoom": 3,
             "type": "vector",
-            "mapping": "",
-            "startTime": "",
-            "endtime": "",
-            "directory_format": ""
+
+            "dataset": "Elevation",
+            "axis":"slider",
+            "stepType":"Time",
+            "stepOption":{"type":"string|unix", "format":"YYYYMMDD"},
+            "step":[],
+            "vectormd5":["xx","xxx"],
+            "rasterMD5":["x","xxx"]
         },
         {
             "id": "landuse_vector_pbf",
