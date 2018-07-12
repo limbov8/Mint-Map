@@ -313,18 +313,21 @@
                 // console.log(json);
                 mintMapObserver.metadata = json;                
                         
-                var layers = document.createElement('div');
-                layers.className = "settings";
-
+                
+                var layersWrapper = document.createElement('div');
+                layersWrapper.className = "settingsWrapper";
                 var collapse = document.createElement('div');
                 collapse.className = "collapse-control";
                 collapse.innerHTML = "";
                 collapse.onclick = function (e) {
-                    window._mintMap.toggleClass(_mintMapShadowRoot.querySelector('.settings'), 'slideDown');
+                    window._mintMap.toggleClass(_mintMapShadowRoot.querySelector('.settingsWrapper'), 'slideDown');
                     window._polymerMap.mint_map_element.querySelector('.settings').scrollTo(0,0)
                 }
-                layers.appendChild(collapse);
-
+                layersWrapper.appendChild(collapse);
+                
+                var layers = document.createElement('div');
+                layers.className = "settings";
+                layersWrapper.appendChild(layers);
                 var layerSwitch = document.createElement('div');
                 layerSwitch.setAttribute('id','layerSwitch');
                 layers.appendChild(layerSwitch);
@@ -363,7 +366,7 @@
                 createProperitesPanel(layers, layersPropertyList, json.sourceLayers, json.layerNames, json.hasData, json.hasTimeline);
                 layers.appendChild(layersPropertyList);
                 _mintMapShadowRoot.querySelector('.geocoder').appendChild(geocoder.onAdd(map));
-                _mintMapShadowRoot.querySelector('.geocoder').appendChild(layers);
+                _mintMapShadowRoot.querySelector('.geocoder').appendChild(layersWrapper);
 
                 
 
