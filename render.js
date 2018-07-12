@@ -604,7 +604,7 @@
                 map.setPaintProperty(curLayerName, 'fill-color', JSON.parse(json.colormap));
                 // map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
                 updateLegend(json['legend-type'],JSON.parse(json.legend));
-                drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json.id);
+                drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json['source-layer']);
                 // addPropertySetting Panel
             }).catch(error => console.error(error));
         }
@@ -670,9 +670,9 @@
                     },
                     'layout': {},
                     'paint': {
-                        'line-width':6,
+                        'line-width':2,
                         'line-color':'#000',
-                        'line-opacity':1
+                        'line-opacity':0.8
                         // 'fill-color': '#e8e8e8',
                         // 'fill-opacity': 0.6
                     }
