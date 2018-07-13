@@ -499,6 +499,7 @@
             if (map.getLayer(layerName)) {
                 map.removeLayer(layerName);
                 map.removeLayer(layerName+"_raster");
+                removeLegend(sourceLayer);
                 removeInspectLayers(layerName);
                 updatePropertiesSettingBy(layerName);
             }
@@ -607,24 +608,25 @@
                 // console.log(json);
                 map.setPaintProperty(curLayerName, 'fill-color', JSON.parse(json.colormap));
                 // map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
-                updateLegend(json['legend-type'],JSON.parse(json.legend), obj.id, obj.layerName);
+                updateLegend(json['legend-type'],JSON.parse(json.legend), obj['source-layer']);
                 drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json['source-layer']);
                 // addPropertySetting Panel
             }).catch(error => console.error(error));
         }
-        function removeLegend(layerid) {
-        	
+        function removeLegend(sourceLayerName) {
+            var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + sourceLayerName);
+            legendItem.parentNode.removeChild(legendItem);
         }
-        function updateLegend(legendType, legend, layerid, layerName) {
+        function updateLegend(legendType, legend, sourceLayerName) {
             var legendElement = _mintMapShadowRoot.querySelector('#map-legend');
             // legendElement.innerHTML = '';
             var legendItem = document.createElement('div');
-            legendItem.className = "legend-item legend-of-" + layerid; 
+            legendItem.className = "legend-item legend-of-" + sourceLayerName; 
             legendElement.appendChild(legendItem);
 
             var legendTitle = document.createElement('div');
             legendTitle.className = 'legend-title'
-            legendTitle.innerHTML = "Legend of layer <span>" + layerName + "</span>:";
+            legendTitle.innerHTML = "Legend of layer <span>#" + sourceLayerName + "</span>:";
             legendItem.appendChild(legendTitle);
 
             var legendContent = document.createElement('div');
