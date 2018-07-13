@@ -601,23 +601,36 @@
                 file:"ckan"},true);
             updateShowAllDiv(false);
 
-            
-
             fetch("http://jonsnow.usc.edu:8081/mintmap/meta/" + obj.id + ".json")
             .then(response => response.json())
             .then(json => {
                 // console.log(json);
                 map.setPaintProperty(curLayerName, 'fill-color', JSON.parse(json.colormap));
                 // map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
-                updateLegend(json['legend-type'],JSON.parse(json.legend));
+                updateLegend(json['legend-type'],JSON.parse(json.legend), obj.id, obj.layerName);
                 drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json['source-layer']);
                 // addPropertySetting Panel
             }).catch(error => console.error(error));
         }
-
-        function updateLegend(legendType, legend) {
+        function removeLegend(layerid) {
+        	
+        }
+        function updateLegend(legendType, legend, layerid, layerName) {
             var legendElement = _mintMapShadowRoot.querySelector('#map-legend');
-            legendElement.innerHTML = '';
+            // legendElement.innerHTML = '';
+            var legendItem = document.createElement('div');
+            legendItem.className = "legend-item legend-of-" + layerid; 
+            legendElement.appendChild(legendItem);
+
+            var legendTitle = document.createElement('div');
+            legendTitle.className = 'legend-title'
+            legendTitle.innerHTML = "Legend of layer <span>" + layerName + "</span>:";
+            legendItem.appendChild(legendTitle);
+
+            var legendContent = document.createElement('div');
+            legendContent.className = 'legend-legend'
+            legendItem.appendChild(legendContent);
+
             if (legendType == 'discrete') {
                 for (i = 0; i < legend.length; i++) {
                   var label = legend[i].label + "(" + legend[i].value + ")";
@@ -631,7 +644,7 @@
                   value.innerHTML = label;
                   item.appendChild(key);
                   item.appendChild(value);
-                  legendElement.appendChild(item);
+                  legendContent.appendChild(item);
                 }
             }else if (legendType == 'linear') {
                 var legendBar = document.createElement('div');
@@ -643,11 +656,11 @@
                     text.push(legend[i].value)
                 }
                 legendBar.style.background = 'linear-gradient(to right, ' + color.join(',') + ')';
-                legendElement.appendChild(legendBar);
+                legendContent.appendChild(legendBar);
                 var flex = document.createElement('div');
                 flex.className = 'legend-flex';
                 flex.innerHTML = '<span>' + text.join('</span><span>') + '</span>';
-                legendElement.appendChild(flex);
+                legendContent.appendChild(flex);
             }
         }
         function drawOriginalBound(coordinates, id="") {

@@ -46,9 +46,10 @@ body {
     padding: 10px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     line-height: 18px;
-    min-height: 50px;
     margin-bottom: 20px;
     min-width: 100px;
+    max-height: 60vh;
+    overflow-y: scroll;
 }
 .legend-key {
     display: inline-block;
@@ -69,6 +70,25 @@ body {
     min-width: 150px;
 }
 .legend-flex span{
+}
+
+.legend-item{
+    max-width: 300px;
+    box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
+    padding: 8px;
+}
+.legend-item .legend-title{
+    width: 100%;
+    word-break: break-all;
+    word-wrap: break-word;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+.legend-item .legend-title span{
+    font-weight: 600;
+}
+.legend-item .legend-legend{
+
 }
 .layer-panel{
     display: none 
@@ -96,22 +116,22 @@ a{
     padding: 16px 20px 35px; 
     transition: 0.4s;
 }
-.settings::-webkit-scrollbar, .settings ::-webkit-scrollbar{
+.settings::-webkit-scrollbar, .settings ::-webkit-scrollbar, .legend::-webkit-scrollbar {
     display: block;
 }
-.settings::-webkit-scrollbar-track, .settings ::-webkit-scrollbar-track{
+.settings::-webkit-scrollbar-track, .settings ::-webkit-scrollbar-track, .legend::-webkit-scrollbar-track {
     box-shadow: 0 0 6px rgba(0,0,0,0.3);
     border-radius: 10px;
     background-color: #F5F5F5;
 
 }
-.settings::-webkit-scrollbar, .settings ::-webkit-scrollbar {
+.settings::-webkit-scrollbar, .settings ::-webkit-scrollbar, .legend::-webkit-scrollbar {
     display: block;
     width: 8px;
     border-radius: 10px;
     background-color: #F5F5F5;
 }
-.settings::-webkit-scrollbar-thumb, .settings ::-webkit-scrollbar-thumb{
+.settings::-webkit-scrollbar-thumb, .settings ::-webkit-scrollbar-thumb, .legend::-webkit-scrollbar-thumb {
     border-radius: 10px;
     width: 6px;
     display: block;
