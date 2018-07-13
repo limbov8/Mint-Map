@@ -69,7 +69,9 @@
         });
         window._mintMap.map = map;
         map.resize();
-        // setTimeout()
+        setTimeout(function () {
+        	map.resize();
+        }, 1000);
 
         window._isMapLoaded = true;
         window._mintMap.onVariablesChanged = function (variables) {
