@@ -6,43 +6,50 @@
         "Elevation",
         "Landuse",
         "Soil",
-        "Precipitation"
+        "Precipitation",
+        "TIME_SERIES"
     ],
     "layerIds": [
         "evap_vector_pbf",
         "landuse_vector_pbf",
         "soil_vector_pbf",
-        "precipitation_vector_pbf"
+        "precipitation_vector_pbf",
+        "TIME_SERIES_vector_pbf"
     ],
     "sourceLayers": [
         "evap",
         "landuse",
         "soil",
-        "precipitation"
+        "precipitation",
+        "time_series"
     ],
     "hasData": [
         true,
         true,
         true,
-        true
+        true,
+        true,
     ],
     "hasTimeline": [
         true,
         false,
         false,
-        false
+        false,
+        true,
     ],
     "vectorMD5":[
         null,
         "f0ecaaa8d47cbbc391a5c1a807b2eca3",
         "4275a535a7c2612dfd5162092821d507",
-        "594f8555a2ae43a5e8c566bed938afe6"
+        "594f8555a2ae43a5e8c566bed938afe6",
+        "md5_timestamp"
     ],
     "rasterMD5":[
         null,
         "f00074d3934f35f32a48cbf22bb11c48",
         "83b6c740143c2b418a588ac458e7bf2b",
-        "b860737163802cae5b22cbc9f14e3cea"
+        "b860737163802cae5b22cbc9f14e3cea",
+        "md5(vectorMD5)"
     ],
     "layers": [
         {
@@ -51,12 +58,13 @@
             "minzoom": 14,
             "maxzoom": 3,
             "type": "vector",
-
             "dataset": "Elevation",
+
             "axis":"slider",
             "stepType":"Time",
             "stepOption":{"type":"string|unix", "format":"YYYYMMDD"},
-            "step":[],
+            "step":["2012","2013"],
+
             "vectormd5":["xx","xxx"],
             "rasterMD5":["x","xxx"]
         },
