@@ -100,6 +100,19 @@
             "startTime": "",
             "endtime": "",
             "directory_format": ""
+        },
+        {
+            "id": "TIME_SERIES_vector_pbf",
+            "source-layer": "time_series",
+            "minzoom": 14,
+            "maxzoom": 3,
+            "type": "vector",
+
+            "axis":"slider",
+            "stepType":"Time",
+            "stepOption":{"type":"string|unix", "format":"YYYYMMDD"},
+            "step":["2012","2013"]
+
         }
     ]
 }
