@@ -126,3 +126,9 @@ const variableHandler2 = {
         // return Reflect.set(...arguments);
     }
 }
+
+module.exports = {
+    handle_variable: handle_variable,
+    variableHandler1: variableHandler1,
+    variableHandler2: variableHandler2
+};

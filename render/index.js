@@ -1,13 +1,12 @@
 require('./date-format.js');
 require('./mintmap.js');
-require('./mintmap-variable.js');
 require('./mintmap-ui-utils.js');
 
 require('./mapbox-utils.js');
 require('./mapbox-layer-utils.js');
-
 var coordinatesGeocoder = require('./mapbox-geocoder.js')
 var mapboxOnload = require('./mapbox-onload.js');
+var {variableHandler1, variableHandler2} = require('./mintmap-variable.js');
 
 window.loadMapLayers = function(mapboxgl){
 
