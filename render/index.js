@@ -1,10 +1,32 @@
 require('./date-format.js');
 require('./mintmap.js');
-require('./mintmap-ui-utils.js');
 
-require('./mapbox-utils.js');
-require('./mapbox-layer-utils.js');
-var coordinatesGeocoder = require('./mapbox-geocoder.js')
+var {
+    createProperitesPanel,
+    updateShowAllDiv,
+    updatePropertiesSettingBy,
+    updateShowAllDiv
+} = require('./mintmap-ui-utils.js');
+
+var {
+    removeLegend,
+    updateLegend,
+    drawOriginalBound,
+    hasLayerNameDisplayed,
+    updateListOfLayersNotAdded
+} = require('./mapbox-utils.js');
+
+var {
+    addNewLayerToMap,
+    removeLayerFromMap,
+    updateInspectLayers,
+    removeInspectLayers,
+    getLastLayerId,
+    loadLayerFromJson,
+    loadTilesOfTimeline
+} = require('./mapbox-layer-utils.js');
+
+
 var mapboxOnload = require('./mapbox-onload.js');
 var {variableHandler1} = require('./mintmap-variable.js');
 
@@ -67,14 +89,6 @@ window.loadMapLayers = function(mapboxgl){
     if (typeof window._mintMapOnloadVars === 'object') {
         window._mintMap.onVariablesChanged(window._mintMapOnloadVars);
     }
-
-    var geocoder = new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        localGeocoder: coordinatesGeocoder,
-        zoom: 10,
-        bbox: [22.9,3.3,36.5,12.5],
-        placeholder: "Try: 29.7, 7.9"
-    });
 
     window._mintMap.map.on('load', mapboxOnload);
 

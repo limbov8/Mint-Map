@@ -21,7 +21,7 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
                                  + "<h4>Opacity</h4>" 
                                  + "<div class='control'>" 
                                  + "<input type='range' min='1' max='100' value='80' class='slider opacity-slider' " 
-        						 + "data-time='no' "
+                                 + "data-time='no' "
                                  + "oninput='window._mintMap.setOpacity(\""+id+"\", this.value, this.getAttribute(\"data-time\"))'>"
                                  + "</div>";
         if (haveTimeline[i]) {
@@ -39,10 +39,10 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
 
             let years = timeLineData.step.map(function (ele) {
                 if (timeLineData.stepOption.format === "yyyy") {
-              		return new Date(ele,0,1).getTime();	
-              	}else if (timeLineData.stepOption.format === "MM") {
-              		return new Date(parseInt(timeLineData.stepOption.prefix), parseInt(ele)-1,1).getTime();
-              	}
+                    return new Date(ele,0,1).getTime(); 
+                }else if (timeLineData.stepOption.format === "MM") {
+                    return new Date(parseInt(timeLineData.stepOption.prefix), parseInt(ele)-1,1).getTime();
+                }
                 return (new Date(ele)).getTime();
             });
             console.log(years);
@@ -76,12 +76,12 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
                             return  (new Date(value)).format(timeLineData.stepOption.format);
                           },
                           from: function ( value ) {
-                          	if (timeLineData.stepOption.format === "yyyy") {
-                          		return new Date(value,0,1).getTime();	
-                          	}else if (timeLineData.stepOption.format === "MM") {
-                          		return new Date(value).getTime();
-                          	}
-                          	return new Date(value).getTime();
+                            if (timeLineData.stepOption.format === "yyyy") {
+                                return new Date(value,0,1).getTime();   
+                            }else if (timeLineData.stepOption.format === "MM") {
+                                return new Date(value).getTime();
+                            }
+                            return new Date(value).getTime();
                           }
                         }
                     },
@@ -104,7 +104,7 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
     // body...
 }
 function updatePropertiesSettingBy(layerName, remove = true) {
-    var ele = _mintMapShadowRoot.querySelector('#layerById-' + layerName);
+    var ele = window._polymerMap.mint_map_element.querySelector('#layerById-' + layerName);
     if (remove) {
         ele.style.display = "none";
     } else {
@@ -113,8 +113,8 @@ function updatePropertiesSettingBy(layerName, remove = true) {
 }
    
 function updateShowAllDiv(isClick = true) {
-    var showAllLayers = _mintMapShadowRoot.querySelector('#show-all-layers');
-    var tagul = _mintMapShadowRoot.querySelector('#the-ul-of-layer-list');
+    var showAllLayers = window._polymerMap.mint_map_element.querySelector('#show-all-layers');
+    var tagul = window._polymerMap.mint_map_element.querySelector('#the-ul-of-layer-list');
     for (var i = 0; i < window._mintMap.listOfLayersNotAdded.length; i++) {
         let alreadyDisplayed = tagul.querySelector("[data-layer-id="+window._mintMap.listOfLayersNotAdded[i].id+"]");
         if (alreadyDisplayed) {
@@ -144,11 +144,17 @@ function updateShowAllDiv(isClick = true) {
     var clearBoth = document.createElement('div');
     clearBoth.style.clear = "both";
     showAll.appendChild(clearBoth);
-    var showDiv = _mintMapShadowRoot.querySelector('#show-all-div');
+    var showDiv = window._polymerMap.mint_map_element.querySelector('#show-all-div');
     if(showDiv){
         showDiv.remove();
     }
-    _mintMapShadowRoot.querySelector('#theTagList').appendChild(showAll);
+    window._polymerMap.mint_map_element.querySelector('#theTagList').appendChild(showAll);
     
 }
 
+module.exports = {
+    createProperitesPanel,
+    updateShowAllDiv,
+    updatePropertiesSettingBy,
+    updateShowAllDiv
+};

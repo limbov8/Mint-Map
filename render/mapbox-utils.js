@@ -1,3 +1,5 @@
+var _mintMapShadowRoot = window._polymerMap.mint_map_element;
+
 function removeLegend(sourceLayerName) {
     var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + sourceLayerName);
     if (legendItem.parentNode) {
@@ -126,4 +128,11 @@ function updateListOfLayersNotAdded(json,removeFromList = true) {
         }
     }
     window._mintMap.autocomplete.list = window._mintMap.listOfLayersNotAdded;
+}
+module.exports = {
+    removeLegend,
+    updateLegend,
+    drawOriginalBound,
+    hasLayerNameDisplayed,
+    updateListOfLayersNotAdded
 }

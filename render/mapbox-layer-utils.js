@@ -1,4 +1,18 @@
 var md5 = require('md5');
+var {
+    createProperitesPanel,
+    updateShowAllDiv,
+    updatePropertiesSettingBy,
+    updateShowAllDiv
+} = require('./mintmap-ui-utils.js');
+var {
+    removeLegend,
+    updateLegend,
+    drawOriginalBound,
+    hasLayerNameDisplayed,
+    updateListOfLayersNotAdded
+} = require('./mapbox-utils.js');
+var _mintMapShadowRoot = window._polymerMap.mint_map_element;
 function addNewLayerToMap(hasData, layerId, layerName, sourceLayer, file, hasTimeline = false) {
     if (!hasData) {
         alert('The data source of this layer has not been added! Can not be shown on the window._mintMap.map.');
@@ -255,4 +269,14 @@ function loadTilesOfTimeline(server, tile_path, identifier, layerId, sourceLayer
         }
         
     }
+}
+
+module.exports = {
+    addNewLayerToMap,
+    removeLayerFromMap,
+    updateInspectLayers,
+    removeInspectLayers,
+    getLastLayerId,
+    loadLayerFromJson,
+    loadTilesOfTimeline
 }

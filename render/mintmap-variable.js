@@ -1,3 +1,14 @@
+var {
+    addNewLayerToMap,
+    removeLayerFromMap,
+    updateInspectLayers,
+    removeInspectLayers,
+    getLastLayerId,
+    loadLayerFromJson,
+    loadTilesOfTimeline
+} = require('./mapbox-layer-utils.js');
+
+var {hasLayerNameDisplayed} = require('./mapbox-utils.js');
 function handle_variable() {
     if (!window._mintMap.uiLoaded) {
         setTimeout(handle_variable, 1000);
@@ -128,7 +139,7 @@ const variableHandler2 = {
 }
 
 module.exports = {
-    handle_variable: handle_variable,
-    variableHandler1: variableHandler1,
-    variableHandler2: variableHandler2
+    handle_variable,
+    variableHandler1,
+    variableHandler2
 };

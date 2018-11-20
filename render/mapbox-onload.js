@@ -1,12 +1,23 @@
+var {createProperitesPanel} = require('./mintmap-ui-utils.js');
+
 var Awesomplete = require('awesomplete');
 var noUiSlider = require('nouislider');
+
 var MapboxInspect = require('mapbox-gl-inspect');
+var coordinatesGeocoder = require('./mapbox-geocoder.js')
 var mapboxInspectToolkit = require('./mapbox-inspect.js');
 var {variableHandler2} = require('./mintmap-variable.js');
 
 const mintMapObserver = new Proxy(window._mintMap, variableHandler2);
 
-module.exports = function () {   
+module.exports = function () {
+    var geocoder = new MapboxGeocoder({
+        accessToken: window.mapboxgl.accessToken,
+        localGeocoder: coordinatesGeocoder,
+        zoom: 10,
+        bbox: [22.9,3.3,36.5,12.5],
+        placeholder: "Try: 29.7, 7.9"
+    });
     window._mintMap.mapInspect = new MapboxInspect({
         showInspectButton: false,
         showMapPopup: true,
@@ -47,7 +58,7 @@ module.exports = function () {
         collapse.className = "collapse-control";
         collapse.innerHTML = "";
         collapse.onclick = function (e) {
-            window._mintMap.toggleClass(_mintMapShadowRoot.querySelector('.settingsWrapper'), 'slideDown');
+            window._mintMap.toggleClass(window._polymerMap.mint_map_element.querySelector('.settingsWrapper'), 'slideDown');
             window._polymerMap.mint_map_element.querySelector('.settings').scrollTo(0,0)
         }
         layersWrapper.appendChild(collapse);
@@ -92,11 +103,11 @@ module.exports = function () {
         // } 
         createProperitesPanel(layers, layersPropertyList, json.sourceLayers, json.layerNames, json.hasData, json.hasTimeline);
         layers.appendChild(layersPropertyList);
-        _mintMapShadowRoot.querySelector('.geocoder').appendChild(geocoder.onAdd(map));
-        _mintMapShadowRoot.querySelector('.geocoder').appendChild(layersWrapper);
+        window._polymerMap.mint_map_element.querySelector('.geocoder').appendChild(geocoder.onAdd(window._mintMap.map));
+        window._polymerMap.mint_map_element.querySelector('.geocoder').appendChild(layersWrapper);
 
 
-        _mintMapShadowRoot.querySelectorAll(".property-slider").forEach(function (ele,idx) {
+        window._polymerMap.mint_map_element.querySelectorAll(".property-slider").forEach(function (ele,idx) {
             let panelId = ele.getAttribute("data-panel");
             noUiSlider.create(ele, window._mintMap.sliderData[panelId]);
             ele.noUiSlider.on('update', function( values, handle ) {
@@ -108,14 +119,14 @@ module.exports = function () {
                 // setPaint(value, allValuesOfYear);
                 // let visibility = map.getLayoutProperty(clickedLayer, 'visibility');
                 // console.log(window._mintMap.sliderData[panelId].extraOption , (new Date(values[handle])) );
-                let map = window._mintMap.map;
+                // let map = window._mintMap.map;
                 let d = new Date(parseInt(values[handle]));
                 if (isNaN(d.getTime())) {
                     console.log("slider time stamp is wrong!");
                     return;
                 }
                 if (window._mintMap.mapInspect._popup.isOpen()) {
-                	window._mintMap.mapInspect._popup.remove();
+                    window._mintMap.mapInspect._popup.remove();
                 }
                 let currentOpacity = ele.parentElement.parentElement.querySelector('.opacity-slider').value;
                 let layerOptions = window._mintMap.sliderData[panelId].extraOption;
@@ -146,7 +157,7 @@ module.exports = function () {
         });
 
 
-        var searchNewLayer = _mintMapShadowRoot.querySelector("#search-new-layer");
+        var searchNewLayer = window._polymerMap.mint_map_element.querySelector("#search-new-layer");
         window._mintMap.autocomplete = new Awesomplete(searchNewLayer, {
             list: window._mintMap.listOfLayersNotAdded,
             maxItems: 5,
@@ -180,12 +191,12 @@ module.exports = function () {
                 // tagul.insertBefore(newLayer, tagSearch);
                 
                 // Change the style of function tag of search
-                var searchNewLayer = _mintMapShadowRoot.querySelector("#search-new-layer");
+                var searchNewLayer = window._polymerMap.mint_map_element.querySelector("#search-new-layer");
                 searchNewLayer.style.display = "none";
                 
-                var addNewLayer = _mintMapShadowRoot.querySelector("#add-new-layer");
+                var addNewLayer = window._polymerMap.mint_map_element.querySelector("#add-new-layer");
                 addNewLayer.style.display = "block";
-                _mintMapShadowRoot.querySelector("#the-li-of-add-new-layer .awesomplete").style.display = "none";
+                window._polymerMap.mint_map_element.querySelector("#the-li-of-add-new-layer .awesomplete").style.display = "none";
             }
         } });
         window._mintMap.uiLoaded = true;
