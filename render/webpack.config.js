@@ -6,5 +6,5 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'render.js'
   },
-  mode: 'development'
+  mode: 'production'
 };

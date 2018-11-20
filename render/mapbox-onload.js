@@ -2,6 +2,9 @@ var Awesomplete = require('awesomplete');
 var noUiSlider = require('nouislider');
 var MapboxInspect = require('mapbox-gl-inspect');
 var mapboxInspectToolkit = require('./mapbox-inspect.js');
+var {variableHandler2} = require('./mintmap-variable.js');
+
+const mintMapObserver = new Proxy(window._mintMap, variableHandler2);
 
 module.exports = function () {   
     window._mintMap.mapInspect = new MapboxInspect({

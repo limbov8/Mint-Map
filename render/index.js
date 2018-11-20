@@ -6,12 +6,11 @@ require('./mapbox-utils.js');
 require('./mapbox-layer-utils.js');
 var coordinatesGeocoder = require('./mapbox-geocoder.js')
 var mapboxOnload = require('./mapbox-onload.js');
-var {variableHandler1, variableHandler2} = require('./mintmap-variable.js');
+var {variableHandler1} = require('./mintmap-variable.js');
 
 window.loadMapLayers = function(mapboxgl){
 
     const variableArrayObserver = new Proxy(window._mintMap.variableArray, variableHandler1);
-    const mintMapObserver = new Proxy(window._mintMap, variableHandler2);
     // window.__defaultLayerName = 'Landuse';
     // window.__defaultLayerMD5 = '';
     mapboxgl.accessToken = 'pk.eyJ1IjoibGlib2xpdSIsImEiOiJjamZ1cXc1cGIwNHlhMnhsYWx0amRrbmdrIn0.d2s82GJZj56n2QUN2WGNsA';
