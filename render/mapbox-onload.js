@@ -1,12 +1,21 @@
 var {createProperitesPanel} = require('./mintmap-ui-utils.js');
 
 var Awesomplete = require('awesomplete');
-var noUiSlider = require('nouislider');
+var noUiSlider = require('./noUiSliderRevised.js');
 
 var MapboxInspect = require('mapbox-gl-inspect');
 var coordinatesGeocoder = require('./mapbox-geocoder.js')
 var mapboxInspectToolkit = require('./mapbox-inspect.js');
 var {variableHandler2} = require('./mintmap-variable.js');
+var {
+    addNewLayerToMap,
+    removeLayerFromMap,
+    updateInspectLayers,
+    removeInspectLayers,
+    getLastLayerId,
+    loadLayerFromJson,
+    loadTilesOfTimeline
+} = require('./mapbox-layer-utils.js');
 
 const mintMapObserver = new Proxy(window._mintMap, variableHandler2);
 
@@ -87,7 +96,7 @@ module.exports = function () {
         tagSearch.innerHTML = "<a id='add-new-layer' class='tag function-tag' onclick='this.style.display=\"none\";window._polymerMap.mint_map_element.querySelector(\"#search-new-layer\").style.display=\"block\";window._polymerMap.mint_map_element.querySelector(\"#search-new-layer\").value=\"\";window._polymerMap.mint_map_element.querySelector(\"#search-new-layer\").focus();window._polymerMap.mint_map_element.querySelector(\"#the-li-of-add-new-layer .awesomplete\").style.display = \"inline-block\";return false;'>Add New Layer</a><input id='search-new-layer' class='awesomplete' style='display:none' placeholder='Search new layers'>";
 
         var tagShowAll = document.createElement('li');
-        tagShowAll.innerHTML = "<a id='show-all-layers' class='tag function-tag' data-show='no'>Show All Layers</a>";
+        tagShowAll.innerHTML = "<a id='show-all-layers' class='tag function-tag' data-show='no' style='display:none'>Show All Layers</a>";
 
         tagul.appendChild(tagSearch);
         tagul.appendChild(tagShowAll);
@@ -95,6 +104,7 @@ module.exports = function () {
         layers.appendChild(tagsList);
 
         var layersPropertyList = document.createElement('div');
+        layersPropertyList.style = "position: relative;"
         layersPropertyList.className = "properties";
         // for (var i = 0; i < json.layerIds.length; i++) {
         //     var name = json.layerNames[i];

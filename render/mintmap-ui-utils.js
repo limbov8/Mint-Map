@@ -155,6 +155,5 @@ function updateShowAllDiv(isClick = true) {
 module.exports = {
     createProperitesPanel,
     updateShowAllDiv,
-    updatePropertiesSettingBy,
-    updateShowAllDiv
+    updatePropertiesSettingBy
 };

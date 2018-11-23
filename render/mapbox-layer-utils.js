@@ -2,8 +2,7 @@ var md5 = require('md5');
 var {
     createProperitesPanel,
     updateShowAllDiv,
-    updatePropertiesSettingBy,
-    updateShowAllDiv
+    updatePropertiesSettingBy
 } = require('./mintmap-ui-utils.js');
 var {
     removeLegend,
