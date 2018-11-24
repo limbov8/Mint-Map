@@ -71,6 +71,8 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
                 // }
             });
             // console.log("yearRange",yearRange);
+            let yearRangeRemainer = parseInt((new Date(yearRange.min[0])).format(timeLineData.stepOption.format))%2;
+            // console.log(yearRange,yearRangeRemainer);
             window._mintMap.sliderData[layersIds[i]] = {
                     start: yearRange.min, 
                     snap: true, 
@@ -86,7 +88,7 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
                         filter: function (value, type) {
                             if (yearsLength > 12) {
                                 let tmp = parseInt((new Date(value)).format(timeLineData.stepOption.format));
-                                return tmp % 2 == 0 ? 0 : 1;
+                                return tmp % 2 == yearRangeRemainer ? 1 : 0;
                             }else{
                                 if (type == 1) {
                                     return 1;
