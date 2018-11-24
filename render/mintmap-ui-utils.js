@@ -42,10 +42,15 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
                     return new Date(ele,0,1).getTime(); 
                 }else if (timeLineData.stepOption.format === "MM") {
                     return new Date(parseInt(timeLineData.stepOption.prefix), parseInt(ele)-1,1).getTime();
+                }else if (timeLineData.stepOption.format === "dd") {
+                    return new Date(
+                            parseInt(timeLineData.stepOption.prefix.substring(0,4)), 
+                            parseInt(timeLineData.stepOption.prefix.substring(4,6)) - 1, 
+                            parseInt(ele)
+                        ).getTime();
                 }
                 return (new Date(ele)).getTime();
             });
-            console.log(years);
             let yearsLength = years.length-1;
             let yearRange = {
                     'min': [years[0]],
@@ -57,8 +62,15 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
                     return;
                 }
                 let percent = Math.ceil((year - years[0])/yearDiff*100) + "%";
+                // if( yearsLength <= 12){
                 yearRange[percent] = [year];
+                // }else{
+                //     if (idx % 4 == 0) {
+                //         yearRange[percent] = [year];
+                //     }
+                // }
             });
+            // console.log("yearRange",yearRange);
             window._mintMap.sliderData[layersIds[i]] = {
                     start: yearRange.min, 
                     snap: true, 
@@ -69,8 +81,23 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
                         decimals: 0
                     }),
                     pips: {
-                        mode: 'range',
-                        density: 100,
+                        mode: 'steps',
+                        density: 3,
+                        filter: function (value, type) {
+                            if (yearsLength > 12) {
+                                let tmp = parseInt((new Date(value)).format(timeLineData.stepOption.format));
+                                return tmp % 2 == 0 ? 0 : 1;
+                            }else{
+                                if (type == 1) {
+                                    return 1;
+                                }else{
+                                    return -1;
+                                }
+                            }
+                        },
+                        // mode: 'count',
+                        // values: yearsLength > 12 ? 12 : yearsLength,
+                        // density: yearsLength > 12 ? 2 : 0,
                         format: {
                           to: function ( value ) {
                             return  (new Date(value)).format(timeLineData.stepOption.format);
