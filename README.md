@@ -1,42 +1,21 @@
 # \<mint-map\>
 
-Mint mapbox to show different layers
 
-![Published by Libo Liu](https://img.shields.io/badge/Libo%20Liu-Author-blue.svg)
-![Contributor by Varun Ratnakar](https://img.shields.io/badge/Varun%20Ratnakar-Contributor-blue.svg)
-![Contributor by Shiwei Huang](https://img.shields.io/badge/Shiwei%20Huang-Bower%20Install-blue.svg)
 
+## Install the Polymer-CLI
+
+First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) and npm (packaged with [Node.js](https://nodejs.org)) installed. Run `npm install` to install your element's dependencies, then run `polymer serve` to serve your element locally.
 
 ## Viewing Your Element
 
-```shell
-polymer serve
+```
+$ polymer serve
 ```
 
-More info in the `demo/mint-map-test-app.html`
-
-### Polymer installation
-
-```shell
-npm install -g polymer-cli
-```
-
-
-## Javascript
-
-Please read `render.js`.
-
-
+## Running Tests
 
 ```
-window._mintMap = {};
+$ polymer test
 ```
 
-This object will be use to transfer data between polymer and raw javascript.
-
-
-## Attention!
-
-- In `render.js`, use `_mintMapShadowRoot` as `document`
-- In `render.js`, when a function is called outside of `window.loadMapLayers`, `window._mintMap` is the best way to store functions.
-- In `mint-map.html`, when pass a parameter, `obsever` is needed! More detail @ https://github.com/PolymerVis/mapbox-gl/blob/master/mapbox-gl.html#L710
+Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
