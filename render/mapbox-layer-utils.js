@@ -11,7 +11,8 @@ var {
     hasLayerNameDisplayed,
     updateListOfLayersNotAdded
 } = require('./mapbox-utils.js');
-var _mintMapShadowRoot = window._polymerMap.mint_map_element;
+var _mintMapShadowRoot = window._polymerMap;
+
 function addNewLayerToMap(hasData, layerId, layerName, sourceLayer, file, hasTimeline = false) {
     if (!hasData) {
         alert('The data source of this layer has not been added! Can not be shown on the window._mintMap.map.');
@@ -116,7 +117,7 @@ function loadLayerFromJson(obj) {
     if("server" in window._mintMap.metadata.layers[0])
         server = window._mintMap.metadata.layers[0].server;
     var identifier = window._mintMap.metadata.layerIds.indexOf(obj.id);
-    let vectorMD5 = window._mintMap.metadata.vectorMD5[identifier];
+    let vectorMD5 = window._mintMap.metadata.md5vector[identifier];
 
     if (!window._mintMap.map.getSource(window._mintMap.metadata.sourceLayers[identifier])) {
         window._mintMap.map.addSource(window._mintMap.metadata.sourceLayers[identifier],{
@@ -126,7 +127,7 @@ function loadLayerFromJson(obj) {
     }
 
     // Start raster layer
-    let rasterMD5 = window._mintMap.metadata.rasterMD5[identifier];
+    let rasterMD5 = window._mintMap.metadata.md5raster[identifier];
     let rasterLayerId = obj.id.replace('vector_pbf','raster_png');
     if (!window._mintMap.map.getSource(rasterLayerId)) {
         window._mintMap.map.addSource(rasterLayerId, {
@@ -174,7 +175,8 @@ function loadLayerFromJson(obj) {
     },true);
     updateShowAllDiv(false);
 
-    fetch("http://jonsnow.usc.edu:8081/mintmap/meta/" + obj.id + ".json?ver="+Math.random())
+    // fetch("http://jonsnow.usc.edu:8081/mintmap/meta/" + obj.id + ".json?ver="+Math.random())
+    fetch("http://127.0.0.1:8000/" + obj.id + ".json?ver="+Math.random())
     .then(response => response.json())
     .then(json => {
         // console.log(json);

@@ -1,5 +1,46 @@
 var wNumb = require('wnumb');
+function initUI() {
+    var layersWrapper = document.createElement('div');
+    layersWrapper.className = "settingsWrapper";
+    
+    var layers = document.createElement('div');
+    layers.className = "settings";
+    layersWrapper.appendChild(layers);
+    var layerSwitch = document.createElement('div');
+    layerSwitch.setAttribute('id','layerSwitch');
+    layers.appendChild(layerSwitch);
+    
+    var variableTitle = document.createElement('div');
+    variableTitle.className = 'variableTitle';
+    variableTitle.innerHTML = "<h2>Layers</h2>";
+    layers.appendChild(variableTitle);
 
+    var tagsList = document.createElement('div');
+    tagsList.setAttribute('id','theTagList');
+    tagsList.className = "layerList tags";
+
+    var tagul = document.createElement('ul');
+    tagul.setAttribute('id','the-ul-of-layer-list');
+    tagul.className = 'tags-list';
+    var tagSearch = document.createElement('li');
+    tagSearch.setAttribute('id','the-li-of-add-new-layer');
+    tagSearch.innerHTML = "<a id='add-new-layer' class='tag function-tag' onclick='this.style.display=\"none\";window._polymerMap.querySelector(\"#search-new-layer\").style.display=\"block\";window._polymerMap.querySelector(\"#search-new-layer\").value=\"\";window._polymerMap.querySelector(\"#search-new-layer\").focus();window._polymerMap.querySelector(\"#the-li-of-add-new-layer .awesomplete\").style.display = \"inline-block\";return false;'>Add New Layer</a><input id='search-new-layer' class='awesomplete' style='display:none' placeholder='Search new layers'>";
+
+    // var tagShowAll = document.createElement('li');
+    // tagShowAll.innerHTML = "<a id='show-all-layers' class='tag function-tag' data-show='no' style='display:none'>Show All Layers</a>";
+
+    tagul.appendChild(tagSearch);
+    // tagul.appendChild(tagShowAll);
+    tagsList.appendChild(tagul);
+    layers.appendChild(tagsList);
+    
+    var layersPropertyList = document.createElement('div');
+    layersPropertyList.style = "position: relative;"
+    layersPropertyList.className = "properties";
+    layers.appendChild(layersPropertyList);
+    
+    window._polymerMap.querySelector('.geocoder').appendChild(layersWrapper);
+}
 function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames, haveData, haveTimeline ) {
 
     // var layersPropertyList = document.createElement('div');
@@ -133,8 +174,9 @@ function createProperitesPanel(layers, layersPropertyList, layersIds, layerNames
     // body...
 }
 function updatePropertiesSettingBy(layerName, remove = true) {
-    var ele = window._polymerMap.mint_map_element.querySelector('#layerById-' + layerName);
-    if (remove) {
+    layerName = layerName.replace(/\./g, '\\.');
+    var ele = window._polymerMap.querySelector('#layerById-' + layerName);
+    if (remove && ele) {
         ele.style.display = "none";
     } else {
         ele.style.display = "block";
@@ -142,8 +184,8 @@ function updatePropertiesSettingBy(layerName, remove = true) {
 }
    
 function updateShowAllDiv(isClick = true) {
-    var showAllLayers = window._polymerMap.mint_map_element.querySelector('#show-all-layers');
-    var tagul = window._polymerMap.mint_map_element.querySelector('#the-ul-of-layer-list');
+    var showAllLayers = window._polymerMap.querySelector('#show-all-layers');
+    var tagul = window._polymerMap.querySelector('#the-ul-of-layer-list');
     for (var i = 0; i < window._mintMap.listOfLayersNotAdded.length; i++) {
         let alreadyDisplayed = tagul.querySelector("[data-layer-id="+window._mintMap.listOfLayersNotAdded[i].id+"]");
         if (alreadyDisplayed) {
@@ -173,15 +215,16 @@ function updateShowAllDiv(isClick = true) {
     var clearBoth = document.createElement('div');
     clearBoth.style.clear = "both";
     showAll.appendChild(clearBoth);
-    var showDiv = window._polymerMap.mint_map_element.querySelector('#show-all-div');
+    var showDiv = window._polymerMap.querySelector('#show-all-div');
     if(showDiv){
         showDiv.remove();
     }
-    window._polymerMap.mint_map_element.querySelector('#theTagList').appendChild(showAll);
+    window._polymerMap.querySelector('#theTagList').appendChild(showAll);
     
 }
 
 module.exports = {
+    initUI,
     createProperitesPanel,
     updateShowAllDiv,
     updatePropertiesSettingBy

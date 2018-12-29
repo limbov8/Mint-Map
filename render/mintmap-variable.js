@@ -27,7 +27,7 @@ function handle_variable() {
         // let isDisplayed = variableArrayMD5s.indexOf(ele);
         if (alreadyDisplayed.length === 0) {
             // remove 
-            let idx = window._mintMap.metadata.vectorMD5.indexOf(ele);
+            let idx = window._mintMap.metadata.md5vector.indexOf(ele);
             let sourceLayer = window._mintMap.metadata.sourceLayers[idx];
             removeLayerFromMap(sourceLayer, window._mintMap.metadata.hasTimeline[idx]);
             removeInspectLayers(sourceLayer + "Layer");
@@ -53,10 +53,10 @@ function handle_variable() {
     // window._mintMap.displayed = [];
 
     for (var i = 0; i < window._mintMap.variableArray.length; i++) {
-        if (!("vectorMD5" in value)) {
+        if (!("md5vector" in value)) {
             break;
         }
-        let md5idx = value.vectorMD5.indexOf(window._mintMap.variableArray[i].md5);
+        let md5idx = value.md5vector.indexOf(window._mintMap.variableArray[i].md5);
         if (md5idx === -1) {
             continue;
         }

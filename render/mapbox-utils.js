@@ -1,4 +1,5 @@
-var _mintMapShadowRoot = window._polymerMap.mint_map_element;
+var _mintMapShadowRoot = window._polymerMap;
+var Awesomplete = require('awesomplete');
 
 function removeLegend(sourceLayerName) {
     var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + sourceLayerName);
@@ -129,10 +130,60 @@ function updateListOfLayersNotAdded(json,removeFromList = true) {
     }
     window._mintMap.autocomplete.list = window._mintMap.listOfLayersNotAdded;
 }
+
+function initLayerSearchAutocomplete(data) {
+    delete data.type;
+    var autoList = Object.keys(data);
+    var searchNewLayer = window._polymerMap.querySelector("#search-new-layer");
+    window._mintMap.autocomplete = new Awesomplete(searchNewLayer, {
+        list: autoList,
+        maxItems: 5,
+        minChars: 1,
+        autoFirst:true
+    });
+    Awesomplete.$.bind(searchNewLayer, { "awesomplete-selectcomplete": function (event) {
+        // console.log(event);
+        var name = event.text.value;
+
+        console.log(data[name])
+        // var idx = json.layerNames.indexOf(name);
+        // if (idx != -1) {
+            
+        //     var hasLayer = addNewLayerToMap(
+        //         json.hasData[idx], 
+        //         json.layerIds[idx], 
+        //         json.layerNames[idx], 
+        //         json.sourceLayers[idx], 
+        //         json.hasData[idx] ? json.layers[idx].file : "",
+        //         json.hasTimeline[idx]);
+        //     if (hasLayer) {
+        //         window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
+        //             return obj.value !== json.layerNames[idx];
+        //         });
+        //         window._mintMap.autocomplete.list = window._mintMap.listOfLayersNotAdded;
+        //     }
+            
+        //     // var newLayer = document.createElement('li');
+        //     // newLayer.innerHTML = "<a href='#' class='tag " + (json.hasData[idx] ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+json.layerIds[idx]+"' data-has-data='" + (json.hasData[idx] ? "true":"false") + "'>" + json.layerNames[idx] + "<div class='tag_close'></div></a>";
+        //     // var tagul = document.getElementById('the-ul-of-layer-list');
+        //     // var tagSearch = document.getElementById('the-li-of-add-new-layer');
+        //     // tagul.insertBefore(newLayer, tagSearch);
+            
+        //     // Change the style of function tag of search
+        //     var searchNewLayer = window._polymerMap.querySelector("#search-new-layer");
+        //     searchNewLayer.style.display = "none";
+            
+        //     var addNewLayer = window._polymerMap.querySelector("#add-new-layer");
+        //     addNewLayer.style.display = "block";
+        //     window._polymerMap.querySelector("#the-li-of-add-new-layer .awesomplete").style.display = "none";
+        // }
+    } });
+}
 module.exports = {
     removeLegend,
     updateLegend,
     drawOriginalBound,
     hasLayerNameDisplayed,
-    updateListOfLayersNotAdded
+    updateListOfLayersNotAdded,
+    initLayerSearchAutocomplete
 }

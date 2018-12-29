@@ -35,10 +35,10 @@ window.loadMapLayers = function(mapboxgl){
     const variableArrayObserver = new Proxy(window._mintMap.variableArray, variableHandler1);
     // window.__defaultLayerName = 'Landuse';
     // window.__defaultLayerMD5 = '';
-    mapboxgl.accessToken = 'pk.eyJ1IjoibGlib2xpdSIsImEiOiJjamZ1cXc1cGIwNHlhMnhsYWx0amRrbmdrIn0.d2s82GJZj56n2QUN2WGNsA';
+    mapboxgl.accessToken = 'pk.eyJ1IjoibGxiMDUzNiIsImEiOiJjamhneW5nb2Exc2NpM2RuMzd2MDIzN3JzIn0.iKiHre34Vadlif1cOOSG9A';
 
     // liboliu.716mmt4v
-    var _mintMapShadowRoot = window._polymerMap.mint_map_element;
+    var _mintMapShadowRoot = window._polymerMap;
     
     var map = new mapboxgl.Map({
         container: _mintMapShadowRoot.querySelector('#map'), // container id
@@ -47,6 +47,7 @@ window.loadMapLayers = function(mapboxgl){
         center: [26.3,7.6],
         zoom: 5, // starting zoom
     });
+   
     window._mintMap.map = map;
     window._mintMap.map.resize();
     setTimeout(function () {

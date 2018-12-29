@@ -4,6 +4,7 @@
  */
 var coordinatesGeocoder = function (query) {
     // match anything which looks like a decimal degrees coordinate pair
+    console.log(query);
     var matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
     if (!matches) {
         return null;

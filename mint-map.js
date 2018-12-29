@@ -108,6 +108,7 @@ class MintMap extends PolymerElement {
         notify: true,
         readonly: true
       },
+      _readyGeocoder: Boolean
     };
   }
   static get importMeta() { 
@@ -115,7 +116,8 @@ class MintMap extends PolymerElement {
   }
   static get observers() {
     return [
-      '_updateMap(loaded, accessToken)'
+      '_updateMap(loaded, accessToken)',
+      '_createGeocoder(accessToken,_readyGeocoder)'
     ];
   }
 
@@ -140,7 +142,7 @@ class MintMap extends PolymerElement {
   connectedCallback() {
     super.connectedCallback();
     window._isMapLoaded = false;
-    window._polymerMap = this.$;
+    window._polymerMap = this.shadowRoot;//this.$;
     this._setMapElement(this.$.map);
     afterNextRender(this, this._init);
   }
@@ -155,7 +157,7 @@ class MintMap extends PolymerElement {
     if (!this.loaded) {
       this._resizeListener = this.addEventListener('iron-resize', this.resize);
       PolymerVis.loadScript(
-        "https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js",
+        "https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js",
         () => {
           this._scriptLoaded = true;
           this._setLoaded(this._scriptLoaded && this._cssLoaded);
@@ -164,7 +166,12 @@ class MintMap extends PolymerElement {
         true
       );
       PolymerVis.loadScript(
-        "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js"
+        "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js",
+        () => {
+          this._readyGeocoder = window.MapboxGeocoder && true;
+        },
+        null,
+        true
       );
       PolymerVis.loadScript(
         // this.resolveUrl("./render.js?rnd=" + Date.now())
@@ -172,11 +179,11 @@ class MintMap extends PolymerElement {
       );
     }
 
-    PolymerVis.insertCssIntoShadowRoot('https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css', this.shadowRoot,() => {
+    PolymerVis.insertCssIntoShadowRoot('https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css', this.shadowRoot,() => {
         this._cssLoaded = true;
         this._setLoaded(this._scriptLoaded && this._cssLoaded);
       },'mapbox');
-    PolymerVis.insertCssIntoShadowRoot('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css', this.shadowRoot, null,'mapbox-geocoder');
+    PolymerVis.insertCssIntoShadowRoot('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.css', this.shadowRoot, null,'mapbox-geocoder');
     PolymerVis.insertCssIntoShadowRoot(this._relativePath() + '/style.css?rnd=' + Date.now(), this.shadowRoot,null,'style');
     // this.resize();
   }
@@ -200,6 +207,17 @@ class MintMap extends PolymerElement {
     );
   }
 
+  _createGeocoder() {
+    if (!this._readyGeocoder) return;
+    var _keydown = MapboxGeocoder.prototype._onKeyDown;
+    // monkey patching
+    MapboxGeocoder.prototype._onKeyDown = function(e) {
+      // events from shadowRoot are targetted to the root element of the
+      // shadowRoot instead of the actual active element
+      // to prevent this retargeting, a proxy object is passed in instead
+      _keydown.call(this, {target: {value: e.target.value}});
+    };
+  }
   _createMap(){
       // var map = new mapboxgl.Map({
       //   container: this.$.map,

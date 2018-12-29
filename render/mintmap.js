@@ -16,7 +16,7 @@ window._mintMap = {
 };
 
 window._mintMap.onresize = function() {
-      window._polymerMap.mint_map_element.style.height = window._polymerMap.mint_map_element.parentNode.host.clientHeight + "px";
+      window._polymerMap.querySelector('#mint_map_element').style.height = window._polymerMap.querySelector('#mint_map_element').parentNode.host.clientHeight + "px";
       window._mintMap.map.resize();
 };
 window._mintMap.toggleClass = function(element, className){
