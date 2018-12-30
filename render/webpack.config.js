@@ -10,6 +10,6 @@ module.exports = {
   plugins:[
    new Dotenv()
   ],
-  // mode: 'development'
-  mode: 'production'
+  mode: 'development'
+  // mode: 'production'
 };

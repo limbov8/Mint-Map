@@ -92,14 +92,14 @@ window.loadMapLayers = function(mapboxgl){
        window._mintMap.styleLoaded = true;
        // console.log(e, window._mintMap.styleLoaded);
     });
-    window._mintMap.map.on('mousemove', function (e) {
-        // console.log(e);
-            // e.point is the x, y coordinates of the mousemove event relative
-            // to the top-left corner of the map
-            // JSON.stringify(e.point) + '<br />' +
-            // e.lngLat is the longitude, latitude geographical position of the event
-            // JSON.stringify(e.lngLat));
-    });
+    // window._mintMap.map.on('mousemove', function (e) {
+    //     // console.log(e);
+    //         // e.point is the x, y coordinates of the mousemove event relative
+    //         // to the top-left corner of the map
+    //         // JSON.stringify(e.point) + '<br />' +
+    //         // e.lngLat is the longitude, latitude geographical position of the event
+    //         // JSON.stringify(e.lngLat));
+    // });
 
 }
 

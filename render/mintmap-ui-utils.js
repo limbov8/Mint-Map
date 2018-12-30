@@ -82,8 +82,9 @@ function createProperitesPanel(json) {
             return;
         }
         let timeLineData = json.layers;
-        layerProperty.innerHTML += "<div class='props'>"
-                             + "<h4>" + timeLineData.stepType + (typeof timeLineData.stepOption.prefix === "undefined" ? "" : (" (" + timeLineData.stepOption.prefix + ")") ) + "</h4>"
+        layerProperty.innerHTML += '<div class="props">'
+                             + '<h4 class="time-slider-title">' + timeLineData.stepType + (typeof timeLineData.stepOption.prefix === "undefined" ? "" : (" (" + timeLineData.stepOption.prefix + ")") ) + '</h4>'
+                             + '<a class="play-slider" href="#"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEcSURBVEhL3dU/S0JRGMfxawputTg0CYKrS4KD+gJ6CdEWTqKDBAnOjg45OejoVHtb0JCEQRC4+A6EdlEoor7PPYjd65/ufe6FG/3gA885gz+uHM6x/mWyGOEDXwEscYtDbOQRNcTtlT5JDHBtr1yRLwhasEoeL2Z0Rj41rOQwMaMzkZc0cWpGT1GV9PCOIVKy8UvUJZfoYIZz7Iu6pGpG6wSvuENaNrYkcIkkgRbeUMcBfiaUklXkQHyiYq/WCaXkGHJ1TFGWDVcClcRwAfmb2pArZFvUJXKy7vEM+ZF9UZfM0YCX+01VcoaMGT1FVeI30ZYssOu0+E0RT2Z05gZ9FCCPjlYJD7jCRo7QxRjyqmnJMy4FYb2yfyaW9Q1xY2SBkW6i0gAAAABJRU5ErkJggg=="></a>'
                              + '<div class="property-slider" id="property-slider-'+ id
                              // layerids is sourcelayer id!!!
                              +'" data-panel="' + id + '"><div>'
@@ -115,6 +116,8 @@ function createProperitesPanel(json) {
         let yearRangeRemainer = parseInt( moment(yearRange.min[0]).format(timeLineData.stepOption.format) ) % 2;
         // console.log(yearRange,yearRangeRemainer);
         window._mintMap.sliderData[json.layerId] = {
+                animate: true,
+                animationDuration: 300,
                 start: yearRange.min, 
                 snap: true, 
                 range: yearRange, 
@@ -150,7 +153,8 @@ function createProperitesPanel(json) {
                       }
                     }
                 },
-                extraOption: timeLineData
+                extraOption: timeLineData,
+                playing: false
             }
     }
 

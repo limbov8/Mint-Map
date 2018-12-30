@@ -8,11 +8,16 @@ var {
     removeLegend,
     updateLegend,
     drawOriginalBound,
+    removeBoundary,
     updateListOfLayersNotAdded
 } = require('./mapbox-utils.js');
 
 var _mintMapShadowRoot = window._polymerMap;
 var noUiSlider = require('./noUiSliderRevised.js');
+var PLAY_BTN_IMG = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEcSURBVEhL3dU/S0JRGMfxawputTg0CYKrS4KD+gJ6CdEWTqKDBAnOjg45OejoVHtb0JCEQRC4+A6EdlEoor7PPYjd65/ufe6FG/3gA885gz+uHM6x/mWyGOEDXwEscYtDbOQRNcTtlT5JDHBtr1yRLwhasEoeL2Z0Rj41rOQwMaMzkZc0cWpGT1GV9PCOIVKy8UvUJZfoYIZz7Iu6pGpG6wSvuENaNrYkcIkkgRbeUMcBfiaUklXkQHyiYq/WCaXkGHJ1TFGWDVcClcRwAfmb2pArZFvUJXKy7vEM+ZF9UZfM0YCX+01VcoaMGT1FVeI30ZYssOu0+E0RT2Z05gZ9FCCPjlYJD7jCRo7QxRjyqmnJMy4FYb2yfyaW9Q1xY2SBkW6i0gAAAABJRU5ErkJggg==">';
+var PAUSE_BTN_IMG = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADpSURBVEhL7dW/CkFRAMfxK4NSyAsYZDUpA97EE8hstHgBJgOrhZcwkAwmu8ELSMqfUvj+3K7un+n+KcKvPnXOGc6vczvdY3xlCpjjinsIZ0yQhiczNBF/zoIngSG6z5krOkHYAislrMyhMzpqVClibQ6deVtJDFkbfW8lCWstowVXfJVogxt2uKABpY8j9thqwRXfJdpI0cb2Eo1z+Je88i/xXXJAHiPYS9qoIXRJChubOpQOrDX9WN3xVRI0P1BygvUDDJsKFubQmTEGKEOPTlBVTNGCJ7quPSyhVy0o3TYVRPXKfkwM4wG6h3SxfzKqPAAAAABJRU5ErkJggg==">';
+var PROMISE_STYLE_LOADING_WAIT = parseInt(process.env.PROMISE_STYLE_LOADING_WAIT)
+
 // layerId is used as "source[tile server path]" id, also used as panel css id
 // sourceLayer is used for vector dataset source layer, also used as "layer[mapbox layer parameter]" id
 // layerName is used to display in the list, also used as unique identity for one panel
@@ -92,6 +97,10 @@ function loadLayer({ md5 = null, dcid = null} = {}) {
     .then(json => {
         // var idx = json.layerNames.indexOf(name);
         // if (idx != -1) {
+        if (json.hasTimeline) {
+            json.colormap = json.colormap.split('|');
+            json.legend = json.legend.split('|');
+        }
         window._mintMap.loadedJson.push(json);
         loadLayerFromJsonPrefix(json);
         // }
@@ -145,16 +154,14 @@ function removeLayerFromMap(json_id) {
     let curLayerName = json.sourceLayer + "_Layer";
     let vectorMapboxLayerId = curLayerName + '_vector';
     let rasterMapboxLayerId = curLayerName + '_raster';
-
+    resetSlider(json.layerId);
     if (window._mintMap.map.getLayer(vectorMapboxLayerId)) {
         window._mintMap.map.removeLayer(vectorMapboxLayerId);
         window._mintMap.map.removeLayer(rasterMapboxLayerId);
         removeLegend(json.layerId);
         removeInspectLayers(vectorMapboxLayerId);
+        removeBoundary(json.id);
         updatePropertiesSettingBy(json);
-    }
-    if (window._mintMap.map.getLayer('boundsOfOriginalDatasets' + json.id)) {
-        window._mintMap.map.removeLayer('boundsOfOriginalDatasets' + json.id);
     }
     if (json.hasTimeline) {
         let jsonSteps = json.layers.step;
@@ -231,10 +238,8 @@ function loadLayerFromJson(json) {
     updatePropertiesSettingBy(json, false);
     updateListOfLayersNotAdded(json, true);
     
-
-    window._mintMap.map.setPaintProperty(vectorMapboxLayerId, 'fill-color', JSON.parse(json.colormap));
     // window._mintMap.map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
-    updateLegend(json['legend-type'], JSON.parse(json.legend), json.sourceLayer, json.layerId);
+    updateLegend(json['legend-type'], JSON.parse(json.legend[0]), json.sourceLayer, json.layerId, 0);
     drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json.id);
     // addPropertySetting Panel
 }
@@ -283,7 +288,8 @@ function loadSingleLayer(json) {
         if (!window._mintMap.styleLoaded) {
             setTimeout(function () {
                 loadSingleLayer(json);
-            }, 1000);
+            }, PROMISE_STYLE_LOADING_WAIT);
+            return;
         }
     }
 
@@ -304,9 +310,16 @@ function loadSingleLayer(json) {
         if (!window._mintMap.styleLoaded) {
             setTimeout(function () {
                 loadSingleLayer(json);
-            }, 1000);
+            }, PROMISE_STYLE_LOADING_WAIT);
+            return;
         }
     }
+    if (json.hasTimeline) {
+        window._mintMap.map.setPaintProperty(vectorMapboxLayerId, 'fill-color', JSON.parse(json.colormap[0]));
+    }else{
+        window._mintMap.map.setPaintProperty(vectorMapboxLayerId, 'fill-color', JSON.parse(json.colormap));
+    }
+    
 }
 function loadTilesOfTimeline(json) {
     let jsonSteps = json.layers.step;
@@ -367,7 +380,8 @@ function loadTilesOfTimeline(json) {
             if (!window._mintMap.styleLoaded) {
                 setTimeout(function () {
                     loadTilesOfTimeline(json);
-                }, 1000);
+                }, PROMISE_STYLE_LOADING_WAIT);
+                return;
             }
         }
         
@@ -388,18 +402,41 @@ function loadTilesOfTimeline(json) {
             if (!window._mintMap.styleLoaded) {
                 setTimeout(function () {
                     loadTilesOfTimeline(json);
-                }, 1000);
+                }, PROMISE_STYLE_LOADING_WAIT);
+                return;
             }
         }
+
+        let colormap = i < json.colormap.length ? json.colormap[i] : json.colormap[0];
+        window._mintMap.map.setPaintProperty(vectorMapboxLayerId, 'fill-color', JSON.parse(colormap));
     }
+}
+function playTimeseries(layerId) {
+    window._mintMap.sliderData[layerId].intervalHandle = setInterval(function () {
+        let ele = window._polymerMap.querySelector("#property-slider-" + layerId);
+        let pointer = parseInt(ele.noUiSlider.get());
+        let list = Object.values(ele.noUiSlider.options.range).map(ele => ele[0]).sort();
+        let curIdx = list.indexOf(pointer);
+        let nextIdx = (curIdx + 1) % list.length;
+        ele.noUiSlider.set(list[nextIdx]);
+    }, parseInt(process.env.ANIMATION_FRAME_INTERVAL))
+}
+function pauseTimeseries(layerId) {
+    if (window._mintMap.sliderData[layerId]) {
+        clearInterval(window._mintMap.sliderData[layerId].intervalHandle);
+    }
+}
+function resetSlider(layerId) {
+    var ele = window._polymerMap.querySelector("#property-slider-" + layerId);
+    let playSliderBtn = ele.parentElement.parentElement.querySelector('.play-slider');
+    playSliderBtn.innerHTML = PLAY_BTN_IMG;
+    window._mintMap.sliderData[layerId].playing = false;
+    pauseTimeseries(layerId);
+    ele.noUiSlider.reset();
 }
 function setupSlider(panelId) {
     var ele = window._polymerMap.querySelector("#property-slider-" + panelId);
-
     noUiSlider.create(ele, window._mintMap.sliderData[panelId]);
-    ele.noUiSlider.on('update', function( values, handle ) {
-        // console.log(typeof values[handle]);
-    });
     var jsonArr = window._mintMap.loadedJson.filter(function (obj) {
         return obj.layerId === panelId;
     });
@@ -408,8 +445,28 @@ function setupSlider(panelId) {
         return false;
     }
     var json = jsonArr[0];
+    let playSliderBtn = ele.parentElement.parentElement.querySelector('.play-slider');
+    playSliderBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var alink = e.target;
+        if (e.target.tagName == 'IMG') {
+            alink = e.target.parentElement;
+        }
+        let sliderData = window._mintMap.sliderData[panelId];
+        if (sliderData.playing) {
+            alink.innerHTML = PLAY_BTN_IMG;
+            window._mintMap.sliderData[panelId].playing = false;
+            pauseTimeseries(panelId);
+        }else{
+            alink.innerHTML = PAUSE_BTN_IMG;
+            window._mintMap.sliderData[panelId].playing = true;
+            playTimeseries(panelId);
+        }
 
-    ele.noUiSlider.on('change', function( values, handle ) {
+        return false;
+    });
+
+    ele.noUiSlider.on('set', function( values, handle ) {
         let d = moment(parseInt(values[handle]));
         if (!d.isValid()) {
             console.warn("slider time stamp is wrong!");
@@ -424,13 +481,14 @@ function setupSlider(panelId) {
         let layerOptions = window._mintMap.sliderData[panelId].extraOption;
         let step = d.format(layerOptions.stepOption.format.toUpperCase());
         let vindex = layerOptions.step.indexOf(step);
-
+        
+        let legend = vindex < json.legend.length ? json.legend[vindex] : json.legend[0]; 
+        updateLegend(json['legend-type'], JSON.parse(legend), json.sourceLayer, json.layerId, vindex);
 
         var curLayerName = json.sourceLayer + '_Layer_' + vindex;
         var vectorMapboxLayerId = curLayerName + '_vector';
         var rasterMapboxLayerId = curLayerName + '_raster';
         
-
         ele.parentElement.parentElement.querySelector('.opacity-slider').setAttribute('data-time', vindex);
         if (step === layerOptions.step[0]) {
             curLayerName = json.sourceLayer + '_Layer';

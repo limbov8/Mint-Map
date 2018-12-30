@@ -43,7 +43,7 @@ module.exports = function () {
     .then(metadata => {
         window._mintMap.metadata = metadata;
 
-        fetch("http://52.90.74.236:65533/minty/autocomplete?ver=" + Math.random())
+        fetch(process.env.API_AUTOCOMPLETE_URL + "?ver=" + Math.random())
         .then(response => response.json())
         .then(autocompleteData => {
             initLayerSearchAutocomplete(autocompleteData);

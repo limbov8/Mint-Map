@@ -182,6 +182,18 @@ a{
     font-size: 12px;
     line-height: 1.5;
 }
+.settings h4.time-slider-title{
+    display: inline-block;
+}
+.settings .play-slider {
+    display: inline-block;
+    padding: 2px 8px;
+    vertical-align: middle;
+}
+.settings .play-slider img{
+    margin-top:6px;
+    width: 19px;
+}
 .card {
     box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.1);
     transition: 0.1s;

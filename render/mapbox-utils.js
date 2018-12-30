@@ -1,6 +1,6 @@
 var _mintMapShadowRoot = window._polymerMap;
 var Awesomplete = require('awesomplete');
-
+var PROMISE_STYLE_LOADING_WAIT = parseInt(process.env.PROMISE_STYLE_LOADING_WAIT)
 function removeLegend(layerId) {
 
     var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + layerId);
@@ -8,12 +8,19 @@ function removeLegend(layerId) {
         legendItem.parentElement.removeChild(legendItem);
     }
 }
-function updateLegend(legendType, legend, sourceLayerName, layerId) {
+
+function updateLegend(legendType, legend, sourceLayerName, layerId, legendIdx = -1) {
     var legendElement = _mintMapShadowRoot.querySelector('#map-legend');
     // legendElement.innerHTML = '';
-    var legendItem = document.createElement('div');
-    legendItem.className = "legend-item legend-of-" + layerId; 
-    legendElement.appendChild(legendItem);
+    var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + layerId);
+
+    if (legendIdx !== -1 && legendItem) {
+        legendItem.innerHTML = '';
+    }else{
+        legendItem = document.createElement('div');
+        legendItem.className = "legend-item legend-of-" + layerId; 
+        legendElement.appendChild(legendItem);
+    }
 
     var legendTitle = document.createElement('div');
     legendTitle.className = 'legend-title'
@@ -56,6 +63,12 @@ function updateLegend(legendType, legend, sourceLayerName, layerId) {
         legendContent.appendChild(flex);
     }
 }
+function removeBoundary(id) {
+    if (window._mintMap.map.getLayer('boundsOfOriginalDatasets' + id)) {
+        window._mintMap.map.removeLayer('boundsOfOriginalDatasets' + id);
+        window._mintMap.map.removeSource('boundsOfOriginalDatasets' + id);
+    }
+}
 function drawOriginalBound(coordinates, id) {
     // window._mintMap.metadata
     let originalDataset = JSON.parse(window._mintMap.metadata.originalDataset);
@@ -73,6 +86,7 @@ function drawOriginalBound(coordinates, id) {
         window._mintMap.map.removeLayer('boundsOfOriginalDatasets' + id);
     }
     if (!window._mintMap.map.getSource('boundsOfOriginalDatasets' + id)) {
+        window._mintMap.styleLoaded = false;
         window._mintMap.map.addLayer({
             'id': 'boundsOfOriginalDatasets' + id,
             'type': 'line',
@@ -89,7 +103,14 @@ function drawOriginalBound(coordinates, id) {
                 // 'fill-opacity': 0.6
             }
         },firstSymbolId);
+        if (!window._mintMap.styleLoaded) {
+            setTimeout(function () {
+                drawOriginalBound(coordinates, id);
+            }, PROMISE_STYLE_LOADING_WAIT);
+            return;
+        }
     }else{
+        window._mintMap.styleLoaded = false;
         window._mintMap.map.addLayer({
             'id': 'boundsOfOriginalDatasets' + id,
             'type': 'line',
@@ -103,6 +124,12 @@ function drawOriginalBound(coordinates, id) {
                 // 'fill-opacity': 0.6
             }
         },firstSymbolId);
+        if (!window._mintMap.styleLoaded) {
+            setTimeout(function () {
+                drawOriginalBound(coordinates, id);
+            }, PROMISE_STYLE_LOADING_WAIT);
+            return;
+        }
     }
 }
 // function hasLayerNameDisplayed(sourceLayer) {
@@ -150,5 +177,6 @@ module.exports = {
     removeLegend,
     updateLegend,
     drawOriginalBound,
+    removeBoundary,
     updateListOfLayersNotAdded
 }
