@@ -145,7 +145,7 @@ function removeLayerFromMap(json_id) {
         return obj.id === json_id;
     });
     if (jsonArr.length == 0) {
-        console.log("No such a Json");
+        console.error("No such a Json");
         return false;
     }
 
@@ -156,7 +156,7 @@ function removeLayerFromMap(json_id) {
     let rasterMapboxLayerId = curLayerName + '_raster';
     resetSlider(json.layerId);
     removeBoundary(json.id);
-    
+
     if (window._mintMap.map.getLayer(vectorMapboxLayerId)) {
         window._mintMap.map.removeLayer(vectorMapboxLayerId);
         window._mintMap.map.removeLayer(rasterMapboxLayerId);
@@ -167,12 +167,12 @@ function removeLayerFromMap(json_id) {
     if (json.hasTimeline) {
         let jsonSteps = json.layers.step;
         if (typeof(jsonSteps) === "undefined" ) {
-            console.log("This metadata is not designed for timeline");
+            console.error("This metadata is not designed for timeline");
             return;
         }
         
         if (json.layers.step.length <= 1) {
-            console.log("There are only one time stamp in the Timeseries");
+            console.error("There are only one time stamp in the Timeseries");
             return;
         }
         // remove all layers except the first one
@@ -325,12 +325,12 @@ function loadSingleLayer(json) {
 function loadTilesOfTimeline(json) {
     let jsonSteps = json.layers.step;
     if (typeof(jsonSteps) === "undefined" ) {
-        console.log("This metadata is not designed for timeline");
+        console.error("This metadata is not designed for timeline");
         return;
     }
     
     if (json.layers.step.length <= 1) {
-        console.log("There are only one time stamp in the Timeseries");
+        console.error("There are only one time stamp in the Timeseries");
         return;
     }
     let server = window._mintMap.metadata.server;
@@ -442,7 +442,7 @@ function setupSlider(panelId) {
         return obj.layerId === panelId;
     });
     if (jsonArr.length == 0) {
-        console.log("No such a Panel");
+        console.error("No such a Panel");
         return false;
     }
     var json = jsonArr[0];

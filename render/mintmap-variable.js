@@ -30,7 +30,7 @@ const variableHandler1 = {
         // remove source/layer not in
         // add all
         if (window._mintMap.metadata.length !== 0) {
-            console.log(window._mintMap.variableArray);
+            // console.log(window._mintMap.variableArray);
             handle_variable();
         }
     }

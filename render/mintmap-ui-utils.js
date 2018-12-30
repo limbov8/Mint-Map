@@ -73,12 +73,12 @@ function createProperitesPanel(json) {
         // layerids is sourcelayer id!!!
         let jsonSteps = json.layers.step;
         if (typeof(jsonSteps) === "undefined" ) {
-            console.log("This metadata is not designed for timeline");
+            console.error("This metadata is not designed for timeline");
             return;
         }
         
         if (json.layers.step.length <= 1) {
-            console.log("There are only one time stamp in the Timeseries");
+            console.error("There are only one time stamp in the Timeseries");
             return;
         }
         let timeLineData = json.layers;
@@ -180,7 +180,7 @@ function updatePropertiesSettingBy(json, remove = true) {
             ele.style.display = "block";
         }    
     }else{
-        console.log("No such layer");
+        console.error("No such layer");
     }
     
 }

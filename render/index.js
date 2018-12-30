@@ -39,11 +39,11 @@ window.loadMapLayers = function(mapboxgl){
     window._isMapLoaded = true;
     window._mintMap.onVariablesChanged = function (variables) {
         if (!Array.isArray(variables)) {
-            console.log("Variables should be an array")
+            console.error("Variables should be an array")
             return false;
         }
         if (variables.length === 0) {
-            console.log("Variables is empty")
+            console.error("Variables is empty")
             return false;
         }
         let isValid = true;
@@ -57,7 +57,7 @@ window.loadMapLayers = function(mapboxgl){
             }
         });
         if (!isValid) {
-            console.log("Items in variables should be an object with format like {name: 'landuse', stdname: 'landuse-standard-name', md5: 'the-md5-hash-from-data-catalog', uri: 'the-uri-from-data-catalog'}")
+            console.error("Items in variables should be an object with format like {name: 'landuse', stdname: 'landuse-standard-name', md5: 'the-md5-hash-from-data-catalog', uri: 'the-uri-from-data-catalog'}")
             return false;
         }
         window._mintMap.variableArrayCount = variables.length;
@@ -92,6 +92,14 @@ window.loadMapLayers = function(mapboxgl){
        window._mintMap.styleLoaded = true;
        // console.log(e, window._mintMap.styleLoaded);
     });
+    // window._mintMap.map.on('styledata', function (e) {
+    //    // window._mintMap.styleLoaded = true;
+    //    console.log(e);
+    // });
+    // window._mintMap.map.on('sourcedata', function (e) {
+    //    // window._mintMap.styleLoaded = true;
+    //    console.log(e);
+    // });
     // window._mintMap.map.on('mousemove', function (e) {
     //     // console.log(e);
     //         // e.point is the x, y coordinates of the mousemove event relative

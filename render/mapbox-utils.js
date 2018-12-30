@@ -65,8 +65,15 @@ function updateLegend(legendType, legend, sourceLayerName, layerId, legendIdx = 
 }
 function removeBoundary(id) {
     if (window._mintMap.map.getLayer('boundsOfOriginalDatasets' + id)) {
+        // window._mintMap.styleLoaded = false;
         window._mintMap.map.removeLayer('boundsOfOriginalDatasets' + id);
-        window._mintMap.map.removeSource('boundsOfOriginalDatasets' + id);
+        // window._mintMap.map.removeSource('boundsOfOriginalDatasets' + id);
+        // if (!window._mintMap.styleLoaded) {
+        //     setTimeout(function () {
+        //         console.log("removeBoundary");
+        //         removeBoundary(id);
+        //     }, PROMISE_STYLE_LOADING_WAIT);
+        // }
     }
 }
 function drawOriginalBound(coordinates, id) {
@@ -81,9 +88,6 @@ function drawOriginalBound(coordinates, id) {
             firstSymbolId = layers[i].id;
             break;
         }
-    }
-    if (window._mintMap.map.getLayer('boundsOfOriginalDatasets' + id)) {
-        window._mintMap.map.removeLayer('boundsOfOriginalDatasets' + id);
     }
     if (!window._mintMap.map.getSource('boundsOfOriginalDatasets' + id)) {
         window._mintMap.styleLoaded = false;
@@ -105,30 +109,34 @@ function drawOriginalBound(coordinates, id) {
         },firstSymbolId);
         if (!window._mintMap.styleLoaded) {
             setTimeout(function () {
+                // console.log("drawOriginalBound2");
                 drawOriginalBound(coordinates, id);
             }, PROMISE_STYLE_LOADING_WAIT);
             return;
         }
     }else{
-        window._mintMap.styleLoaded = false;
-        window._mintMap.map.addLayer({
-            'id': 'boundsOfOriginalDatasets' + id,
-            'type': 'line',
-            'source': 'boundsOfOriginalDatasets' + id,
-            'layout': {},
-            'paint': {
-                'line-width':6,
-                'line-color':'#000',
-                'line-opacity':1
-                // 'fill-color': '#e8e8e8',
-                // 'fill-opacity': 0.6
+        if (!window._mintMap.map.getLayer('boundsOfOriginalDatasets' + id)) {
+            window._mintMap.styleLoaded = false;
+            window._mintMap.map.addLayer({
+                'id': 'boundsOfOriginalDatasets' + id,
+                'type': 'line',
+                'source': 'boundsOfOriginalDatasets' + id,
+                'layout': {},
+                'paint': {
+                    'line-width':6,
+                    'line-color':'#000',
+                    'line-opacity':1
+                    // 'fill-color': '#e8e8e8',
+                    // 'fill-opacity': 0.6
+                }
+            },firstSymbolId);
+            if (!window._mintMap.styleLoaded) {
+                setTimeout(function () {
+                    // console.log("drawOriginalBound2");
+                    drawOriginalBound(coordinates, id);
+                }, PROMISE_STYLE_LOADING_WAIT);
+                return;
             }
-        },firstSymbolId);
-        if (!window._mintMap.styleLoaded) {
-            setTimeout(function () {
-                drawOriginalBound(coordinates, id);
-            }, PROMISE_STYLE_LOADING_WAIT);
-            return;
         }
     }
 }

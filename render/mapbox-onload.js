@@ -50,45 +50,5 @@ module.exports = function () {
             window._mintMap.uiLoaded = true;
         });
     });
-
-    // fetch("http://jonsnow.usc.edu:8081/mintmap/meta/metadata.json?ver=" + Math.random())
-    // fetch("http://127.0.0.1:8000/metadata.json?ver=" + Math.random())
-    // .then(response => response.json())
-    // .then(json => {
-    //     // console.log('loaded');
-    //     // var layersIds = [];
-    //     // var layerNames = [];
-    //     // var layerIdSource = {};
-    //     // var layerIdName = {};
-    //     // // console.log(json.layerNames);
-    //     // var layerNames = 
-    //     // for (var i = 0; i < json.layerNames.length; i++) {
-
-    //         // layersIds.push(json.layerIds[i]);
-    //         // layerIdSource[json.layerIds[i]] = json.sourceLayers[i];
-    //         // layerIdName[json.layerIds[i]] = json.sourceNames[i];
-    //     // }
-    //     // console.log(json);
-    //     mintMapObserver.metadata = json;                
-
-
-
-    //     // for (var i = 0; i < json.layerIds.length; i++) {
-    //     //     var name = json.layerNames[i];
-    //     //     var id = json.layerIds[i];
-
-    //     // } 
-    //     // createProperitesPanel(layers, layersPropertyList, json.sourceLayers, json.layerNames, json.hasData, json.hasTimeline);
-
-  
-
-
-        
-    //     window._mintMap.uiLoaded = true;
-    // },
-    // error => {
-    //     console.log(error);
-    // });
-
     
 };
