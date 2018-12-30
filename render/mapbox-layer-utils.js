@@ -155,12 +155,13 @@ function removeLayerFromMap(json_id) {
     let vectorMapboxLayerId = curLayerName + '_vector';
     let rasterMapboxLayerId = curLayerName + '_raster';
     resetSlider(json.layerId);
+    removeBoundary(json.id);
+    
     if (window._mintMap.map.getLayer(vectorMapboxLayerId)) {
         window._mintMap.map.removeLayer(vectorMapboxLayerId);
         window._mintMap.map.removeLayer(rasterMapboxLayerId);
         removeLegend(json.layerId);
         removeInspectLayers(vectorMapboxLayerId);
-        removeBoundary(json.id);
         updatePropertiesSettingBy(json);
     }
     if (json.hasTimeline) {
