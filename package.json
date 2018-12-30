@@ -2,6 +2,8 @@
   "name": "mint-map",
   "main": "mint-map.js",
   "version":"0.1.0",
+  "author": "Libo Liu",
+  "license": "MIT",
   "dependencies": {
     "@polymer/iron-resizable-behavior": "^3.0.1",
     "@polymer/polymer": "^3.0.0",

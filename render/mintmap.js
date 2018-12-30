@@ -3,7 +3,7 @@ window._mintMap = {
     onresize: () => {},
     getLayerNameBySoureLayer: () => {},
     variableArrayCount: 0,
-    metadata: [],
+    metadata: {},
     listOfLayersNotAdded: [],
     displayed: [],
     variableArray: [],
@@ -12,7 +12,8 @@ window._mintMap = {
     autocomplete: {},
     toggleClass: () => {},
     bounds: [22.4, 3.4, 37.0, 23.2],
-    sliderData: {}
+    sliderData: {},
+    loadedJson: []
 };
 
 window._mintMap.onresize = function() {
@@ -36,7 +37,7 @@ window._mintMap.toggleClass = function(element, className){
 window._mintMap.setOpacity = function(layerId, value, timeline = "no") {
     // map.setPaintProperty(layerId, 'fill-opacity', parseInt(value, 10) / 100);
     if (timeline !== "no") {
-        window._mintMap.map.setPaintProperty(layerId+'_raster_' + timeline, 'raster-opacity', parseInt(value, 10) / 100);
+        window._mintMap.map.setPaintProperty(layerId + "_" +  timeline + "_raster", 'raster-opacity', parseInt(value, 10) / 100);
     }else{
         window._mintMap.map.setPaintProperty(layerId+'_raster', 'raster-opacity', parseInt(value, 10) / 100);
     }

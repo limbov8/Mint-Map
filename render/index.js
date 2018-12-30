@@ -1,29 +1,11 @@
-require('./date-format.js');
 require('./mintmap.js');
 
 var {
-    createProperitesPanel,
-    updateShowAllDiv,
-    updatePropertiesSettingBy,
-    updateShowAllDiv
-} = require('./mintmap-ui-utils.js');
-
-var {
-    removeLegend,
-    updateLegend,
-    drawOriginalBound,
-    hasLayerNameDisplayed,
     updateListOfLayersNotAdded
 } = require('./mapbox-utils.js');
 
 var {
-    addNewLayerToMap,
-    removeLayerFromMap,
-    updateInspectLayers,
-    removeInspectLayers,
-    getLastLayerId,
-    loadLayerFromJson,
-    loadTilesOfTimeline
+    removeLayerFromMap
 } = require('./mapbox-layer-utils.js');
 
 
@@ -100,60 +82,11 @@ window.loadMapLayers = function(mapboxgl){
                 e.target.parentElement.parentElement.remove();
                 // TODO remove the layer
                 var tag = e.target.parentElement;
-                removeLayerFromMap(tag.getAttribute('data-source-layer'), tag.getAttribute('data-has-timeline') == "true" ? true : false);
-                updateListOfLayersNotAdded({
-                    layerName:tag.text, 
-                    layerId: tag.getAttribute('data-layer-id'), 
-                    hasData: tag.getAttribute('data-has-data') == "true" ? true : false, 
-                    sourceLayer:tag.getAttribute('data-source-layer'), 
-                    file:tag.getAttribute('data-file'),
-                    hasTimeline: tag.getAttribute('data-has-timeline') == "true" ? true : false
-                },false)
-                updateShowAllDiv(false);
-            }else{
-                // console.log(e.target);
-
-                var tag = e.target.parentElement;
-                // var newLayer = document.createElement('li');
-                // newLayer.innerHTML = "<a href='#' class='"+ tag.className +"' data-layer-id='"+ tag.getAttribute('data-layer-id')+"' data-has-data='" + tag.getAttribute('data-has-data') + "' data-source-layer='" + tag.getAttribute('data-source-layer') + "' data-file='"+ tag.getAttribute('data-file') +"'>" + tag.text + "<div class='tag_close'></div></a>";
-                
-                // var tagul = _mintMapShadowRoot.getElementById('the-ul-of-layer-list');
-                // var tagSearch = _mintMapShadowRoot.getElementById('the-li-of-add-new-layer');
-                // tagul.insertBefore(newLayer, tagSearch);
-
-                var hasLayer = addNewLayerToMap(
-                    tag.getAttribute('data-has-data') === "true" ? true : false, 
-                    tag.getAttribute('data-layer-id'), 
-                    tag.text, 
-                    tag.getAttribute('data-source-layer'), 
-                    tag.getAttribute('data-file'),
-                    tag.getAttribute('data-has-timeline') === "true" ? true : false
-                    );
-                if (!hasLayer) {
-                    return false;
-                }
-                e.target.parentElement.parentElement.remove();
-                // TODO add the layer
-                // remove from window. list of 
-                updateListOfLayersNotAdded({layerName:tag.text},true);
-                updateShowAllDiv(false);
-            }
-            
-        }
-        if (e.target.id == 'show-all-layers') {
-            var sal = _mintMapShadowRoot.querySelector('#show-all-layers');
-            var showDiv = _mintMapShadowRoot.querySelector('#show-all-div');
-            if(showDiv){
-                showDiv.remove();
-                sal.innerHTML = "Show All Layers";
-                sal.setAttribute('data-show',"no");
-            }else{
-                updateShowAllDiv();
-                sal.innerHTML = "Hide All Layers";
-                sal.setAttribute('data-show',"yes");
+                var json_id = parseInt(tag.getAttribute('data-id'));
+                removeLayerFromMap(json_id);
+                updateListOfLayersNotAdded(json_id, false);
             }
         }
-        
     });
 
     window._mintMap.map.on('mousemove', function (e) {

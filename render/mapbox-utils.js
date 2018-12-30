@@ -1,17 +1,18 @@
 var _mintMapShadowRoot = window._polymerMap;
 var Awesomplete = require('awesomplete');
 
-function removeLegend(sourceLayerName) {
-    var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + sourceLayerName);
-    if (legendItem.parentNode) {
-        legendItem.parentNode.removeChild(legendItem);
+function removeLegend(layerId) {
+
+    var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + layerId);
+    if (legendItem.parentElement) {
+        legendItem.parentElement.removeChild(legendItem);
     }
 }
-function updateLegend(legendType, legend, sourceLayerName) {
+function updateLegend(legendType, legend, sourceLayerName, layerId) {
     var legendElement = _mintMapShadowRoot.querySelector('#map-legend');
     // legendElement.innerHTML = '';
     var legendItem = document.createElement('div');
-    legendItem.className = "legend-item legend-of-" + sourceLayerName; 
+    legendItem.className = "legend-item legend-of-" + layerId; 
     legendElement.appendChild(legendItem);
 
     var legendTitle = document.createElement('div');
@@ -55,7 +56,7 @@ function updateLegend(legendType, legend, sourceLayerName) {
         legendContent.appendChild(flex);
     }
 }
-function drawOriginalBound(coordinates, id="") {
+function drawOriginalBound(coordinates, id) {
     // window._mintMap.metadata
     let originalDataset = JSON.parse(window._mintMap.metadata.originalDataset);
     originalDataset.features[0].geometry.coordinates = coordinates;
@@ -90,100 +91,64 @@ function drawOriginalBound(coordinates, id="") {
         },firstSymbolId);
     }else{
         window._mintMap.map.addLayer({
-        'id': 'boundsOfOriginalDatasets' + id,
-        'type': 'line',
-        'source': 'boundsOfOriginalDatasets' + id,
-        'layout': {},
-        'paint': {
-            'line-width':6,
-            'line-color':'#000',
-            'line-opacity':1
-            // 'fill-color': '#e8e8e8',
-            // 'fill-opacity': 0.6
+            'id': 'boundsOfOriginalDatasets' + id,
+            'type': 'line',
+            'source': 'boundsOfOriginalDatasets' + id,
+            'layout': {},
+            'paint': {
+                'line-width':6,
+                'line-color':'#000',
+                'line-opacity':1
+                // 'fill-color': '#e8e8e8',
+                // 'fill-opacity': 0.6
+            }
+        },firstSymbolId);
+    }
+}
+// function hasLayerNameDisplayed(sourceLayer) {
+//     let temp = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
+//         return obj.value === sourceLayer;
+//     });
+//     if (temp.length > 0) {
+//         return true;
+//     }
+//     return false;
+// }
+function updateListOfLayersNotAdded(json_id, removeFromList = true) {
+    var json = json_id;
+    if (typeof(json_id) === "number") {
+        var jsonArr = window._mintMap.loadedJson.filter(function (obj) {
+            return obj.id === json_id;
+        });
+        if (jsonArr.length == 0) {
+            console.log("No such a Json");
+            return;
         }
-    },firstSymbolId);
+
+        json = jsonArr[0];
     }
-}
-function hasLayerNameDisplayed(layerName) {
-    let temp = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
-        return obj.value === layerName;
-    });
-    if (temp.length > 0) {
-        return true;
-    }
-    return false;
-}
-function updateListOfLayersNotAdded(json,removeFromList = true) {
+    var sourceLayer = json.sourceLayer.replace(/\./g,'_');
     if (removeFromList) {
         window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
-            return obj.value !== json.layerName;
+            return obj.value !== sourceLayer;
         });
     }else{
         window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
-            return obj.value !== json.layerName;
+            return obj.value !== sourceLayer;
         });
         if (!json.hasData) {
-            window._mintMap.listOfLayersNotAdded.unshift({label:json.layerName + " (No data)", value: json.layerName, id: json.layerId, hasData: json.hasData, source: json.sourceLayer, file:""});
+            window._mintMap.listOfLayersNotAdded.unshift({label:sourceLayer + " (No data)", value: sourceLayer, md5: json.md5vector});
         }else{
-            window._mintMap.listOfLayersNotAdded.unshift({label:json.layerName, value: json.layerName, id: json.layerId, hasData: json.hasData, source: json.sourceLayer, file:json.file, hasTimeline: json.hasTimeline});
+            window._mintMap.listOfLayersNotAdded.unshift({label:sourceLayer, value: sourceLayer, md5: json.md5vector});
         }
     }
     window._mintMap.autocomplete.list = window._mintMap.listOfLayersNotAdded;
 }
 
-function initLayerSearchAutocomplete(data) {
-    delete data.type;
-    var autoList = Object.keys(data);
-    var searchNewLayer = window._polymerMap.querySelector("#search-new-layer");
-    window._mintMap.autocomplete = new Awesomplete(searchNewLayer, {
-        list: autoList,
-        maxItems: 5,
-        minChars: 1,
-        autoFirst:true
-    });
-    Awesomplete.$.bind(searchNewLayer, { "awesomplete-selectcomplete": function (event) {
-        // console.log(event);
-        var name = event.text.value;
 
-        console.log(data[name])
-        // var idx = json.layerNames.indexOf(name);
-        // if (idx != -1) {
-            
-        //     var hasLayer = addNewLayerToMap(
-        //         json.hasData[idx], 
-        //         json.layerIds[idx], 
-        //         json.layerNames[idx], 
-        //         json.sourceLayers[idx], 
-        //         json.hasData[idx] ? json.layers[idx].file : "",
-        //         json.hasTimeline[idx]);
-        //     if (hasLayer) {
-        //         window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
-        //             return obj.value !== json.layerNames[idx];
-        //         });
-        //         window._mintMap.autocomplete.list = window._mintMap.listOfLayersNotAdded;
-        //     }
-            
-        //     // var newLayer = document.createElement('li');
-        //     // newLayer.innerHTML = "<a href='#' class='tag " + (json.hasData[idx] ? "with-data-tag":"no-data-tag") + "' data-layer-id='"+json.layerIds[idx]+"' data-has-data='" + (json.hasData[idx] ? "true":"false") + "'>" + json.layerNames[idx] + "<div class='tag_close'></div></a>";
-        //     // var tagul = document.getElementById('the-ul-of-layer-list');
-        //     // var tagSearch = document.getElementById('the-li-of-add-new-layer');
-        //     // tagul.insertBefore(newLayer, tagSearch);
-            
-        //     // Change the style of function tag of search
-        //     var searchNewLayer = window._polymerMap.querySelector("#search-new-layer");
-        //     searchNewLayer.style.display = "none";
-            
-        //     var addNewLayer = window._polymerMap.querySelector("#add-new-layer");
-        //     addNewLayer.style.display = "block";
-        //     window._polymerMap.querySelector("#the-li-of-add-new-layer .awesomplete").style.display = "none";
-        // }
-    } });
-}
 module.exports = {
     removeLegend,
     updateLegend,
     drawOriginalBound,
-    hasLayerNameDisplayed,
-    updateListOfLayersNotAdded,
-    initLayerSearchAutocomplete
+    updateListOfLayersNotAdded
 }
