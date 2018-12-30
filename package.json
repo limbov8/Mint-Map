@@ -1,7 +1,7 @@
 {
   "name": "mint-map",
   "main": "mint-map.js",
-  "version":"0.1.0",
+  "version": "0.1.0",
   "author": "Libo Liu",
   "license": "MIT",
   "dependencies": {

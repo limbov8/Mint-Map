@@ -38,7 +38,7 @@ module.exports = function () {
     
     initUI();
     
-    fetch("http://52.90.74.236:65533/minty/metadata?ver=" + Math.random())
+    fetch(process.env.API_METADATA_URL + "?ver=" + Math.random())
     .then(response => response.json())
     .then(metadata => {
         window._mintMap.metadata = metadata;

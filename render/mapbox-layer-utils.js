@@ -59,7 +59,7 @@ function loadLayer({ md5 = null, dcid = null} = {}) {
         return false;
     }
 
-    var url = "http://52.90.74.236:65533/minty/layer/";
+    var url = process.env.API_LAYER_BASE_URL;
 
 
     let jsonArr = window._mintMap.loadedJson.filter(function (obj) {
@@ -350,7 +350,7 @@ function loadTilesOfTimeline(json) {
                 bounds: window._mintMap.bounds
             });
         }
-        
+
         if (!window._mintMap.map.getLayer(rasterMapboxLayerId)) {
             window._mintMap.styleLoaded = false;
             window._mintMap.map.addLayer({
