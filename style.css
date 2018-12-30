@@ -114,10 +114,10 @@ a{
     width:100%;
     height: 90%;
     max-height: 85vh;
-    overflow: hidden;
+    overflow: visible;
     background: #fff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    padding: 16px 20px 35px; 
+    /*box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);*/
+    padding: 16px 6px 35px 10px; 
     transition: 0.4s;
 }
 .settings::-webkit-scrollbar, .settings ::-webkit-scrollbar, .legend::-webkit-scrollbar {
@@ -183,7 +183,7 @@ a{
     line-height: 1.5;
 }
 .card {
-    box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
+    box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.1);
     transition: 0.1s;
     width: 100%;
     padding:12px 12px 24px 12px;
@@ -238,14 +238,15 @@ a{
 
 .properties{
     width: 100%;
-    margin: 12px 4px;
-    max-height: 50vh;
+    margin: 12px 2px;
+    height: 85%;
     overflow-y: auto;
     overflow-x: hidden;
-    box-shadow: 0 0 6px rgba(0,0,0,.3);
+    padding: 0 16px 0 0;
+    /*box-shadow: 0 0 6px rgba(0,0,0,.3);*/
 }
 .properties > div {
-    margin: 8px;
+    margin: 4px;
 }
 .layerList a, a:hover,.layerList a:focus{
     /*color:#59b329;
