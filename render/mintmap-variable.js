@@ -12,7 +12,7 @@ function handle_variable() {
     }
     for (var i = 0; i < window._mintMap.variableArray.length; i++) {
         if (window._mintMap.variableArray[i].hasOwnProperty('md5')) {
-            loadLayer(window._mintMap.variableArray[i].md5);
+            loadLayer({md5:window._mintMap.variableArray[i].md5});
         }
     }
 }
