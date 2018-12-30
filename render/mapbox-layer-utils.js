@@ -39,7 +39,7 @@ function initLayerSearchAutocomplete(data) {
  
     Awesomplete.$.bind(searchNewLayer, { "awesomplete-selectcomplete": function (event) {
         let value = event.text.value;
-        let tmp = window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
+        let tmp = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
             return obj.value === value;
         });
 
@@ -59,7 +59,7 @@ function loadLayer({ md5 = null, dcid = null} = {}) {
         return false;
     }
 
-    var url = "http://s.next.sh:65533/minty/layer/";
+    var url = "http://52.90.74.236:65533/minty/layer/";
 
 
     let jsonArr = window._mintMap.loadedJson.filter(function (obj) {
@@ -71,7 +71,6 @@ function loadLayer({ md5 = null, dcid = null} = {}) {
     });
     if (jsonArr.length > 0) {
         let json = jsonArr[0];
-
         // already displayed
         var ele = _mintMapShadowRoot.querySelector('#layerById-' + json.layerId);
         if (ele && ele.style && ele.style.display === "block") {
@@ -88,7 +87,7 @@ function loadLayer({ md5 = null, dcid = null} = {}) {
         url += md5;
     }
 
-    fetch(url)
+    fetch(url + "?ver=" + Math.random())
     .then(response => response.json())
     .then(json => {
         // var idx = json.layerNames.indexOf(name);
@@ -103,12 +102,6 @@ function loadLayer({ md5 = null, dcid = null} = {}) {
 
 function loadLayerFromJsonPrefix(json) {
     var hasLayer = addNewLayerToMap(json);
-    if (hasLayer) {
-        window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
-            return obj.value !== json.sourceLayer;
-        });
-        window._mintMap.autocomplete.list = window._mintMap.listOfLayersNotAdded;
-    }
     
     var searchNewLayer = window._polymerMap.querySelector("#search-new-layer");
     searchNewLayer.style.display = "none";
@@ -210,15 +203,46 @@ function removeInspectLayers(curLayerName) {
 }
 function loadLayerFromJson(json) {
 
-    if (!json.hasData) {
-        console.log("hasNoData");
-        return false;
+    let layerId = json.layerId;
+    let vectorServerSourceId = layerId;
+    let rasterServerSourceId = layerId.replace('vector_pbf','raster_png');
+    
+    var curLayerName = json.sourceLayer + "_Layer";
+    let vectorMapboxLayerId = curLayerName + '_vector';
+    let rasterMapboxLayerId = curLayerName + '_raster';
+
+
+    loadSingleLayer(json);
+    // The first one
+    updateInspectLayers(vectorMapboxLayerId);
+
+    if (json.hasTimeline) {
+        loadTilesOfTimeline(json);
     }
+
+    // window._mintMap.displayed.push(vectorMD5);
+
+    var ele = _mintMapShadowRoot.querySelector('#layerById-' + json.layerId);
+    if ( !ele ) {
+        createProperitesPanel(json);
+        setupSlider(json.layerId);
+    }
+    
+    updatePropertiesSettingBy(json, false);
+    updateListOfLayersNotAdded(json, true);
+    
+
+    window._mintMap.map.setPaintProperty(vectorMapboxLayerId, 'fill-color', JSON.parse(json.colormap));
+    // window._mintMap.map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
+    updateLegend(json['legend-type'], JSON.parse(json.legend), json.sourceLayer, json.layerId);
+    drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json.id);
+    // addPropertySetting Panel
+}
+function loadSingleLayer(json) {
     let tile_path = window._mintMap.metadata.tiles;
     let server = window._mintMap.metadata.server;
     let vectorMD5 = json.md5vector;
     let rasterMD5 = json.md5raster;
-
 
     let layerId = json.layerId;
     let vectorServerSourceId = layerId;
@@ -242,7 +266,9 @@ function loadLayerFromJson(json) {
             bounds: window._mintMap.bounds
         });
     }
+
     if (!window._mintMap.map.getLayer(rasterMapboxLayerId)) {
+        window._mintMap.styleLoaded = false;
         window._mintMap.map.addLayer({
             "id": rasterMapboxLayerId,
             "type": 'raster',
@@ -254,8 +280,15 @@ function loadLayerFromJson(json) {
                 'raster-opacity':0.8
             },
         });
+        if (!window._mintMap.styleLoaded) {
+            setTimeout(function () {
+                loadSingleLayer(json);
+            }, 1000);
+        }
     }
+
     if (!window._mintMap.map.getLayer(vectorMapboxLayerId)) {
+        window._mintMap.styleLoaded = false;
         window._mintMap.map.addLayer({
             "id": vectorMapboxLayerId,
             "type": "fill",
@@ -268,36 +301,98 @@ function loadLayerFromJson(json) {
                 "fill-opacity": 0.0
             }
         });
+        if (!window._mintMap.styleLoaded) {
+            setTimeout(function () {
+                loadSingleLayer(json);
+            }, 1000);
+        }
     }
-
-    // The first one
-    updateInspectLayers(vectorMapboxLayerId);
-
-
-    if (json.hasTimeline) {
-        loadTilesOfTimeline(json);
-    }
-    window._mintMap.displayed.push(vectorMD5);
-
-    var ele = _mintMapShadowRoot.querySelector('#layerById-' + json.layerId);
-    if ( !ele ) {
-        createProperitesPanel(json);
-        setupSlider(json.layerId);
-    }
-    
-    updatePropertiesSettingBy(json, false);
-    updateListOfLayersNotAdded(json, true);
-    
-
-    window._mintMap.map.setPaintProperty(vectorMapboxLayerId, 'fill-color', JSON.parse(json.colormap));
-    // window._mintMap.map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
-    updateLegend(json['legend-type'], JSON.parse(json.legend), json.sourceLayer, json.layerId);
-    drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json.id);
-    // addPropertySetting Panel
 }
+function loadTilesOfTimeline(json) {
+    let jsonSteps = json.layers.step;
+    if (typeof(jsonSteps) === "undefined" ) {
+        console.log("This metadata is not designed for timeline");
+        return;
+    }
+    
+    if (json.layers.step.length <= 1) {
+        console.log("There are only one time stamp in the Timeseries");
+        return;
+    }
+    let server = window._mintMap.metadata.server;
+    let tile_path = window._mintMap.metadata.tiles;
+    for (var i = 1; i < json.layers.step.length; i++) {
+        let vectorMd5 = json.md5vector + "_" + i;
+        let rasterMd5 = md5(vectorMd5);
+        let sourceLayerNameInMbtiles = json.sourceLayer + "#" + i;
 
+        let layerId = json.layerId + "_" + i;
+        let vectorServerSourceId = layerId;
+        let rasterServerSourceId = layerId.replace('vector_pbf','raster_png');
 
+        let curLayerName = json.sourceLayer + "_Layer_" + i;
+        let vectorMapboxLayerId = curLayerName + '_vector';
+        let rasterMapboxLayerId = curLayerName + '_raster';
+        // load all timeline inspect
+        // updateInspectLayers(vectorMapboxLayerId);
 
+        if (!window._mintMap.map.getSource(vectorServerSourceId)) {
+            window._mintMap.map.addSource(vectorServerSourceId,{
+                type: 'vector',
+                tiles: [server + vectorMd5 + tile_path + '.pbf']
+            });
+        }
+
+        if (!window._mintMap.map.getSource(rasterServerSourceId)) {
+            window._mintMap.map.addSource(rasterServerSourceId, {
+                type: 'raster',
+                tiles: [server + rasterMd5 + tile_path + '.png'],
+                bounds: window._mintMap.bounds
+            });
+        }
+        
+        if (!window._mintMap.map.getLayer(rasterMapboxLayerId)) {
+            window._mintMap.styleLoaded = false;
+            window._mintMap.map.addLayer({
+                "id": rasterMapboxLayerId,
+                "type": 'raster',
+                'source': rasterServerSourceId,
+                'layout': {
+                    'visibility': 'none',
+                },
+                'paint':{
+                    'raster-opacity':0.8
+                },
+            });
+            if (!window._mintMap.styleLoaded) {
+                setTimeout(function () {
+                    loadTilesOfTimeline(json);
+                }, 1000);
+            }
+        }
+        
+        if (!window._mintMap.map.getLayer(vectorMapboxLayerId)) {
+            window._mintMap.styleLoaded = false;
+            window._mintMap.map.addLayer({
+                "id": vectorMapboxLayerId,
+                "type": "fill",
+                "source": vectorServerSourceId,
+                "source-layer": sourceLayerNameInMbtiles,
+                "layout": {
+                    'visibility': 'none'
+                },
+                "paint": {
+                    "fill-opacity": 0.0
+                }
+            });
+            if (!window._mintMap.styleLoaded) {
+                setTimeout(function () {
+                    loadTilesOfTimeline(json);
+                }, 1000);
+            }
+        }
+    }
+}
 function setupSlider(panelId) {
     var ele = window._polymerMap.querySelector("#property-slider-" + panelId);
 
@@ -371,99 +466,6 @@ function setupSlider(panelId) {
         })
     });
 }
-function loadTilesOfTimeline(json) {
-    let jsonSteps = json.layers.step;
-    if (typeof(jsonSteps) === "undefined" ) {
-        console.log("This metadata is not designed for timeline");
-        return;
-    }
-    
-    if (json.layers.step.length <= 1) {
-        console.log("There are only one time stamp in the Timeseries");
-        return;
-    }
-    let server = window._mintMap.metadata.server;
-    let tile_path = window._mintMap.metadata.tiles;
-    for (var i = 1; i < json.layers.step.length; i++) {
-        let vectorMd5 = json.md5vector + "_" + i;
-        let rasterMd5 = md5(vectorMd5);
-        let sourceLayerNameInMbtiles = json.sourceLayer + "#" + i;
-
-        let layerId = json.layerId + "_" + i;
-        let vectorServerSourceId = layerId;
-        let rasterServerSourceId = layerId.replace('vector_pbf','raster_png');
-
-        let curLayerName = json.sourceLayer + "_Layer_" + i;
-        let vectorMapboxLayerId = curLayerName + '_vector';
-        let rasterMapboxLayerId = curLayerName + '_raster';
-        // load all timeline inspect
-        // updateInspectLayers(vectorMapboxLayerId);
-
-        if (!window._mintMap.map.getSource(vectorServerSourceId)) {
-            window._mintMap.map.addSource(vectorServerSourceId,{
-                type: 'vector',
-                tiles: [server + vectorMd5 + tile_path + '.pbf']
-            });
-        }
-
-        if (!window._mintMap.map.getSource(rasterServerSourceId)) {
-            window._mintMap.map.addSource(rasterServerSourceId, {
-                type: 'raster',
-                tiles: [server + rasterMd5 + tile_path + '.png'],
-                bounds: window._mintMap.bounds
-            });
-        }
-        if (!window._mintMap.map.getLayer(rasterMapboxLayerId)) {
-            window._mintMap.map.addLayer({
-                "id": rasterMapboxLayerId,
-                "type": 'raster',
-                'source': rasterServerSourceId,
-                'layout': {
-                    'visibility': 'none',
-                },
-                'paint':{
-                    'raster-opacity':0.8
-                },
-            });
-        }
-        
-        if (!window._mintMap.map.getLayer(vectorMapboxLayerId)) {
-            window._mintMap.map.addLayer({
-                "id": vectorMapboxLayerId,
-                "type": "fill",
-                "source": vectorServerSourceId,
-                "source-layer": sourceLayerNameInMbtiles,
-                "layout": {
-                    'visibility': 'none'
-                },
-                "paint": {
-                    "fill-opacity": 0.0
-                }
-            });
-        }
-    }
-
-    // let timelines = window._mintMap.sliderData[sourceLayerId];
-    // "axis":"slider",
-    // "stepType":"Time",
-    // "stepOption":{"type":"string", "format":"YYYY"},
-    // "step":["2012","2013","2014"]// 
-
-    // for (var i = 1; i < timelineLayer.step.length; i++) {
-    //     let vectorMD5_of_idx = vectorMD5Prefix + timelineLayer.step[i];
-    //     let rasterMD5_of_idx = md5(vectorMD5_of_idx);
-    //     let vectorSourceId_of_idx = sourceLayerId + "vector_pbf" + timelineLayer.step[i];
-    //     let rasterSourceId_of_idx = sourceLayerId + "raster_png" + timelineLayer.step[i];
-
-        
-    //     let rasterLayerId_of_idx = curLayerName + "_raster_" + timelineLayer.step[i];
-    //     let vectorLayerId_of_idx = curLayerName + "_vector_" + timelineLayer.step[i];
-
-       
-        
-    // }
-}
-
 
 
 module.exports = {

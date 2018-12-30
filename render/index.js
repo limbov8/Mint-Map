@@ -88,7 +88,10 @@ window.loadMapLayers = function(mapboxgl){
             }
         }
     });
-
+    window._mintMap.map.on('style.load', function (e) {
+       window._mintMap.styleLoaded = true;
+       // console.log(e, window._mintMap.styleLoaded);
+    });
     window._mintMap.map.on('mousemove', function (e) {
         // console.log(e);
             // e.point is the x, y coordinates of the mousemove event relative

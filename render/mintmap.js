@@ -13,7 +13,8 @@ window._mintMap = {
     toggleClass: () => {},
     bounds: [22.4, 3.4, 37.0, 23.2],
     sliderData: {},
-    loadedJson: []
+    loadedJson: [],
+    styleLoaded: false
 };
 
 window._mintMap.onresize = function() {
