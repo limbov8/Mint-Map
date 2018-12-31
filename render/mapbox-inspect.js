@@ -83,5 +83,5 @@ var mapboxInspectToolkit = {
         return '<div class="mapbox-gl-inspect_feature">' + self.renderProperties(getModeForEachLayer) + '</div>';//.join('');
     }
 };
-
-module.exports = mapboxInspectToolkit;
+export default mapboxInspectToolkit;
+// module.exports = mapboxInspectToolkit;

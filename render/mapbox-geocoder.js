@@ -2,7 +2,7 @@
  * geographic coordinate(s) as search results in carmen geojson format,
  * https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
  */
-var coordinatesGeocoder = function (query) {
+export default function coordinatesGeocoder(query) {
     // match anything which looks like a decimal degrees coordinate pair
     var matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
     if (!matches) {
@@ -45,4 +45,4 @@ var coordinatesGeocoder = function (query) {
 
     return geocodes;
 };
-module.exports = coordinatesGeocoder;
+// module.exports = coordinatesGeocoder;

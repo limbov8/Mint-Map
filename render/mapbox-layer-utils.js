@@ -1,19 +1,34 @@
-var md5 = require('md5');
-var moment = require('moment')
-var {
+import * as md5 from 'md5';
+import * as moment from 'moment';
+import * as noUiSlider from './noUiSliderRevised.js';
+import {
     createProperitesPanel,
     updatePropertiesSettingBy
-} = require('./mintmap-ui-utils.js');
-var {
+} from './mintmap-ui-utils.js';
+import {
     removeLegend,
     updateLegend,
     drawOriginalBound,
     removeBoundary,
     updateListOfLayersNotAdded
-} = require('./mapbox-utils.js');
+} from './mapbox-utils.js';
+// var md5 = require('md5');
+// var moment = require('moment')
+// var {
+//     createProperitesPanel,
+//     updatePropertiesSettingBy
+// } = require('./mintmap-ui-utils.js');
+// var {
+//     removeLegend,
+//     updateLegend,
+//     drawOriginalBound,
+//     removeBoundary,
+//     updateListOfLayersNotAdded
+// } = require('./mapbox-utils.js');
+// var noUiSlider = require('./noUiSliderRevised.js');
+
 
 var _mintMapShadowRoot = window._polymerMap;
-var noUiSlider = require('./noUiSliderRevised.js');
 var PLAY_BTN_IMG = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEcSURBVEhL3dU/S0JRGMfxawputTg0CYKrS4KD+gJ6CdEWTqKDBAnOjg45OejoVHtb0JCEQRC4+A6EdlEoor7PPYjd65/ufe6FG/3gA885gz+uHM6x/mWyGOEDXwEscYtDbOQRNcTtlT5JDHBtr1yRLwhasEoeL2Z0Rj41rOQwMaMzkZc0cWpGT1GV9PCOIVKy8UvUJZfoYIZz7Iu6pGpG6wSvuENaNrYkcIkkgRbeUMcBfiaUklXkQHyiYq/WCaXkGHJ1TFGWDVcClcRwAfmb2pArZFvUJXKy7vEM+ZF9UZfM0YCX+01VcoaMGT1FVeI30ZYssOu0+E0RT2Z05gZ9FCCPjlYJD7jCRo7QxRjyqmnJMy4FYb2yfyaW9Q1xY2SBkW6i0gAAAABJRU5ErkJggg==">';
 var PAUSE_BTN_IMG = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADpSURBVEhL7dW/CkFRAMfxK4NSyAsYZDUpA97EE8hstHgBJgOrhZcwkAwmu8ELSMqfUvj+3K7un+n+KcKvPnXOGc6vczvdY3xlCpjjinsIZ0yQhiczNBF/zoIngSG6z5krOkHYAislrMyhMzpqVClibQ6deVtJDFkbfW8lCWstowVXfJVogxt2uKABpY8j9thqwRXfJdpI0cb2Eo1z+Je88i/xXXJAHiPYS9qoIXRJChubOpQOrDX9WN3xVRI0P1BygvUDDJsKFubQmTEGKEOPTlBVTNGCJ7quPSyhVy0o3TYVRPXKfkwM4wG6h3SxfzKqPAAAAABJRU5ErkJggg==">';
 var PROMISE_STYLE_LOADING_WAIT = parseInt(process.env.PROMISE_STYLE_LOADING_WAIT)
@@ -21,7 +36,7 @@ var PROMISE_STYLE_LOADING_WAIT = parseInt(process.env.PROMISE_STYLE_LOADING_WAIT
 // layerId is used as "source[tile server path]" id, also used as panel css id
 // sourceLayer is used for vector dataset source layer, also used as "layer[mapbox layer parameter]" id
 // layerName is used to display in the list, also used as unique identity for one panel
-function initLayerSearchAutocomplete(data) {
+export function initLayerSearchAutocomplete(data) {
     delete data.type;
     var autoList = Object.keys(data);
     for (var k in data) {
@@ -58,7 +73,7 @@ function initLayerSearchAutocomplete(data) {
     } });
 }
 
-function loadLayer({ md5 = null, dcid = null} = {}) {
+export function loadLayer({ md5 = null, dcid = null} = {}) {
     if (md5 == null && dcid == null) {
         console.error("MD5 or DCID is required.")
         return false;
@@ -140,7 +155,7 @@ function addNewLayerToMap(json) {
     return true;
 
 }
-function removeLayerFromMap(json_id) {
+export function removeLayerFromMap(json_id) {
     var jsonArr = window._mintMap.loadedJson.filter(function (obj) {
         return obj.id === json_id;
     });
@@ -527,8 +542,8 @@ function setupSlider(panelId) {
 }
 
 
-module.exports = {
-    removeLayerFromMap,
-    loadLayer,
-    initLayerSearchAutocomplete
-}
+// module.exports = {
+//     removeLayerFromMap,
+//     loadLayer,
+//     initLayerSearchAutocomplete
+// }

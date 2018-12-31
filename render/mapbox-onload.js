@@ -1,15 +1,20 @@
-var {initUI,
-    createProperitesPanel
-} = require('./mintmap-ui-utils.js');
+import { initUI, createProperitesPanel } from './mintmap-ui-utils.js';
+import * as MapboxInspect from 'mapbox-gl-inspect';
+import mapboxInspectToolkit from './mapbox-inspect.js';
+import {initLayerSearchAutocomplete} from './mapbox-layer-utils.js';
+import * as coordinatesGeocoder from './mapbox-geocoder.js';
+// var {initUI,
+//     createProperitesPanel
+// } = require('./mintmap-ui-utils.js');
 
-var MapboxInspect = require('mapbox-gl-inspect');
-var mapboxInspectToolkit = require('./mapbox-inspect.js');
-// var {variableHandler2} = require('./mintmap-variable.js');
-var {initLayerSearchAutocomplete} = require('./mapbox-layer-utils.js')
-// const mintMapObserver = new Proxy(window._mintMap, variableHandler2);
-var coordinatesGeocoder = require('./mapbox-geocoder.js')
+// var MapboxInspect = require('mapbox-gl-inspect');
+// var mapboxInspectToolkit = require('./mapbox-inspect.js');
+// // var {variableHandler2} = require('./mintmap-variable.js');
+// var {initLayerSearchAutocomplete} = require('./mapbox-layer-utils.js')
+// // const mintMapObserver = new Proxy(window._mintMap, variableHandler2);
+// var coordinatesGeocoder = require('./mapbox-geocoder.js')
 
-module.exports = function () {
+export default function mapboxOnload() {
 
     window._mintMap.map.addControl(new mapboxgl.NavigationControl());
     window._mintMap.mapInspect = new MapboxInspect({

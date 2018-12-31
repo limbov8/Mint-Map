@@ -1,16 +1,10 @@
-require('./mintmap.js');
-
-var {
-    updateListOfLayersNotAdded
-} = require('./mapbox-utils.js');
-
-var {
-    removeLayerFromMap
-} = require('./mapbox-layer-utils.js');
-
-
-var mapboxOnload = require('./mapbox-onload.js');
-var {variableHandler1} = require('./mintmap-variable.js');
+import './mintmap.js';
+import {updateListOfLayersNotAdded} from './mapbox-utils.js';
+import {removeLayerFromMap} from './mapbox-layer-utils.js';
+import mapboxOnload from './mapbox-onload.js';
+import {variableHandler1} from './mintmap-variable.js';
+// var mapboxOnload = require('./mapbox-onload.js');
+// var {variableHandler1} = require('./mintmap-variable.js');
 
 window.loadMapLayers = function(mapboxgl){
 

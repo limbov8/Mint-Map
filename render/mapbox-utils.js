@@ -1,7 +1,10 @@
-var _mintMapShadowRoot = window._polymerMap;
-var Awesomplete = require('awesomplete');
+import * as Awesomplete from 'awesomplete';
+// var Awesomplete = require('awesomplete');
+
 var PROMISE_STYLE_LOADING_WAIT = parseInt(process.env.PROMISE_STYLE_LOADING_WAIT)
-function removeLegend(layerId) {
+var _mintMapShadowRoot = window._polymerMap;
+
+export function removeLegend(layerId) {
 
     var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + layerId);
     if (legendItem.parentElement) {
@@ -9,7 +12,7 @@ function removeLegend(layerId) {
     }
 }
 
-function updateLegend(legendType, legend, sourceLayerName, layerId, legendIdx = -1) {
+export function updateLegend(legendType, legend, sourceLayerName, layerId, legendIdx = -1) {
     var legendElement = _mintMapShadowRoot.querySelector('#map-legend');
     // legendElement.innerHTML = '';
     var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + layerId);
@@ -63,7 +66,7 @@ function updateLegend(legendType, legend, sourceLayerName, layerId, legendIdx = 
         legendContent.appendChild(flex);
     }
 }
-function removeBoundary(id) {
+export function removeBoundary(id) {
     if (window._mintMap.map.getLayer('boundsOfOriginalDatasets' + id)) {
         // window._mintMap.styleLoaded = false;
         window._mintMap.map.removeLayer('boundsOfOriginalDatasets' + id);
@@ -76,7 +79,7 @@ function removeBoundary(id) {
         // }
     }
 }
-function drawOriginalBound(coordinates, id) {
+export function drawOriginalBound(coordinates, id) {
     // window._mintMap.metadata
     let originalDataset = JSON.parse(window._mintMap.metadata.originalDataset);
     originalDataset.features[0].geometry.coordinates = coordinates;
@@ -149,14 +152,14 @@ function drawOriginalBound(coordinates, id) {
 //     }
 //     return false;
 // }
-function updateListOfLayersNotAdded(json_id, removeFromList = true) {
+export function updateListOfLayersNotAdded(json_id, removeFromList = true) {
     var json = json_id;
     if (typeof(json_id) === "number") {
         var jsonArr = window._mintMap.loadedJson.filter(function (obj) {
             return obj.id === json_id;
         });
         if (jsonArr.length == 0) {
-            console.log("No such a Json");
+            console.error("No such a Json");
             return;
         }
 
@@ -181,10 +184,10 @@ function updateListOfLayersNotAdded(json_id, removeFromList = true) {
 }
 
 
-module.exports = {
-    removeLegend,
-    updateLegend,
-    drawOriginalBound,
-    removeBoundary,
-    updateListOfLayersNotAdded
-}
+// module.exports = {
+//     removeLegend,
+//     updateLegend,
+//     drawOriginalBound,
+//     removeBoundary,
+//     updateListOfLayersNotAdded
+// }

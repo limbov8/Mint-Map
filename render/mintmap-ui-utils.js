@@ -1,6 +1,8 @@
-var moment = require('moment')
-var wNumb = require('wnumb');
-function initUI() {
+import * as moment from 'moment';
+import * as wNumb from 'wnumb';
+// var moment = require('moment')
+// var wNumb = require('wnumb');
+export function initUI() {
     var layersWrapper = document.createElement('div');
     layersWrapper.className = "settingsWrapper";
     
@@ -43,7 +45,7 @@ function initUI() {
 
     window._polymerMap.querySelector('.geocoder').appendChild(layersWrapper);
 }
-function createProperitesPanel(json) {
+export function createProperitesPanel(json) {
 
     // var layersPropertyList = document.createElement('div');
     // layersPropertyList.className = "properties";
@@ -170,7 +172,7 @@ function createProperitesPanel(json) {
 
     // body...
 }
-function updatePropertiesSettingBy(json, remove = true) {
+export function updatePropertiesSettingBy(json, remove = true) {
     var layerId = json.layerId;
     var ele = window._polymerMap.querySelector('#layerById-' + layerId);
     if (ele) {
@@ -185,8 +187,8 @@ function updatePropertiesSettingBy(json, remove = true) {
     
 }
 
-module.exports = {
-    initUI,
-    createProperitesPanel,
-    updatePropertiesSettingBy
-};
+// module.exports = {
+//     initUI,
+//     createProperitesPanel,
+//     updatePropertiesSettingBy
+// };

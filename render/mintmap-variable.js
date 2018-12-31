@@ -1,6 +1,7 @@
-var {
-    loadLayer
-} = require('./mapbox-layer-utils.js');
+import {loadLayer} from './mapbox-layer-utils.js';
+// var {
+//     loadLayer
+// } = require('./mapbox-layer-utils.js');
 
 function handle_variable() {
     if (!window._mintMap.uiLoaded) {
@@ -19,7 +20,7 @@ function handle_variable() {
 
 // Use proxy to observe the change of displayed layer name
 // window._mintMap.listOfLayersNotAdded=[];
-const variableHandler1 = {
+export const variableHandler1 = {
   set(target, key, value) {
     // console.log(`handler1 Setting value ${key} as ${value}`);
     // console.log(target);
@@ -80,8 +81,8 @@ const variableHandler1 = {
 //     }
 // }
 
-module.exports = {
-    handle_variable,
-    variableHandler1
-    // variableHandler2
-};
+// module.exports = {
+//     handle_variable,
+//     variableHandler1
+//     // variableHandler2
+// };
