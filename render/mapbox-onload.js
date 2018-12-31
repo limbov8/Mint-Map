@@ -2,7 +2,7 @@ import { initUI, createProperitesPanel } from './mintmap-ui-utils.js';
 import * as MapboxInspect from 'mapbox-gl-inspect';
 import mapboxInspectToolkit from './mapbox-inspect.js';
 import {initLayerSearchAutocomplete} from './mapbox-layer-utils.js';
-import * as coordinatesGeocoder from './mapbox-geocoder.js';
+import coordinatesGeocoder from './mapbox-geocoder.js';
 // var {initUI,
 //     createProperitesPanel
 // } = require('./mintmap-ui-utils.js');
