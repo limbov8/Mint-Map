@@ -12,7 +12,8 @@ module.exports = {
   },
   plugins:[
     new Dotenv(),
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    // new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)
   ],
   // performance: { 
   //   hints: false 
