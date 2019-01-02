@@ -1,6 +1,6 @@
 # \<mint-map\>
 
-
+![Published by Libo Liu](https://img.shields.io/badge/Libo%20Liu-Author-blue.svg)
 
 ## Install the Polymer-CLI
 
