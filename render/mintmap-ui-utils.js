@@ -116,7 +116,9 @@ export function createProperitesPanel(json) {
         });
         // console.log("yearRange",yearRange);
         let yearRangeRemainer = parseInt( moment(yearRange.min[0]).format(timeLineData.stepOption.format) ) % 2;
-        // console.log(yearRange,yearRangeRemainer);
+        // let dividend = 20000000;
+        let yearRangeRemainer30 = parseInt( moment(yearRange.min[0]).format('DD') );
+        console.log(yearRange,yearRangeRemainer);
         window._mintMap.sliderData[json.layerId] = {
                 animate: true,
                 animationDuration: 300,
@@ -132,7 +134,10 @@ export function createProperitesPanel(json) {
                     mode: 'steps',
                     density: 3,
                     filter: function (value, type) {
-                        if (yearsLength > 12) {
+                        if (yearsLength >= 24) {
+                            let tmp = parseInt( moment(value).format('DD'));
+                            return tmp == yearRangeRemainer30 ? 1 : 0;
+                        }else if (yearsLength > 12 && yearsLength < 24) {
                             let tmp = parseInt( moment(value).format(timeLineData.stepOption.format));
                             return tmp % 2 == yearRangeRemainer ? 1 : 0;
                         }else{
@@ -148,7 +153,7 @@ export function createProperitesPanel(json) {
                     // density: yearsLength > 12 ? 2 : 0,
                     format: {
                       to: function ( value ) {
-                        return  moment(value).format(timeLineData.stepOption.format);
+                        return  moment(value).format(timeLineData.stepOption.format.replace('YYYY','YYYY[<br>]'));
                       },
                       from: function ( value ) {
                         return moment(value).valueOf();
