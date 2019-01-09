@@ -118,7 +118,7 @@ export function createProperitesPanel(json) {
         let yearRangeRemainer = parseInt( moment(yearRange.min[0]).format(timeLineData.stepOption.format) ) % 2;
         // let dividend = 20000000;
         let yearRangeRemainer30 = parseInt( moment(yearRange.min[0]).format('DD') );
-        console.log(yearRange,yearRangeRemainer);
+        // console.log(yearRange,yearRangeRemainer);
         window._mintMap.sliderData[json.layerId] = {
                 animate: true,
                 animationDuration: 300,
