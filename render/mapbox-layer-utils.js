@@ -257,7 +257,11 @@ function loadLayerFromJson(json) {
     updateListOfLayersNotAdded(json, true);
     
     // window._mintMap.map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
-    updateLegend(json['legend-type'], JSON.parse(json.legend[0]), json.sourceLayer, json.layerId, 0);
+    if (json.hasTimeline) {
+        updateLegend(json['legend-type'], JSON.parse(json.legend[0]), json.sourceLayer, json.layerId, 0);
+    }else{
+        updateLegend(json['legend-type'], JSON.parse(json.legend), json.sourceLayer, json.layerId, 0);
+    }
     drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json.id);
     // addPropertySetting Panel
 }
