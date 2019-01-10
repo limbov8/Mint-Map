@@ -36,7 +36,10 @@ export function updateLegend(legendType, legend, sourceLayerName, layerId, legen
 
     if (legendType == 'discrete') {
         for (i = 0; i < legend.length; i++) {
-          var label = legend[i].label + "(" + legend[i].value + ")";
+          let legentValue = legend[i].value - parseInt(legend[i].value);
+          legentValue = legentValue + "";
+
+          var label = legend[i].label + "(" + (legentValue.length > 4 ? legend[i].value.toFixed(2) : legend[i].value) + ")";
           var color = legend[i].color;
           var item = document.createElement('div');
           var key = document.createElement('span');
@@ -56,7 +59,9 @@ export function updateLegend(legendType, legend, sourceLayerName, layerId, legen
         var text = [];
         for (var i = 0; i < legend.length; i++) {
             color.push(legend[i].color);
-            text.push(legend[i].value)
+            let legentValue = legend[i].value - parseInt(legend[i].value);
+            legentValue = legentValue + "";
+            text.push((legentValue.length > 4 ? legend[i].value.toFixed(2) : legend[i].value))
         }
         legendBar.style.background = 'linear-gradient(to right, ' + color.join(',') + ')';
         legendContent.appendChild(legendBar);
