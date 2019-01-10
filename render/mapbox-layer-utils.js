@@ -248,7 +248,9 @@ function loadLayerFromJson(json) {
     var ele = _mintMapShadowRoot.querySelector('#layerById-' + json.layerId);
     if ( !ele ) {
         createProperitesPanel(json);
-        setupSlider(json.layerId);
+        if (json.hasTimeline) {
+            setupSlider(json.layerId);
+        }
     }
     
     updatePropertiesSettingBy(json, false);
