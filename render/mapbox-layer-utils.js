@@ -169,7 +169,9 @@ export function removeLayerFromMap(json_id) {
     let curLayerName = json.sourceLayer + "_Layer";
     let vectorMapboxLayerId = curLayerName + '_vector';
     let rasterMapboxLayerId = curLayerName + '_raster';
-    resetSlider(json.layerId);
+    if (json.hasTimeline) {
+        resetSlider(json.layerId);
+    }
     removeBoundary(json.id);
 
     if (window._mintMap.map.getLayer(vectorMapboxLayerId)) {
