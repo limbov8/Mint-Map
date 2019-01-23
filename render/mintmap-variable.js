@@ -11,11 +11,16 @@ function handle_variable() {
     if (window._mintMap.variableArray.length === 0) {
         return;
     }
+
     for (var i = 0; i < window._mintMap.variableArray.length; i++) {
-        if (window._mintMap.variableArray[i].hasOwnProperty('md5')) {
+        if (window._mintMap.variableArray[i].hasOwnProperty('dataset_id')) {
+            loadLayer({md5:window._mintMap.variableArray[i].dataset_id});
+        }else if (window._mintMap.variableArray[i].hasOwnProperty('md5')) {
             loadLayer({md5:window._mintMap.variableArray[i].md5});
         }
+
     }
+
 }
 
 // Use proxy to observe the change of displayed layer name

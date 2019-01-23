@@ -35,7 +35,7 @@ var PROMISE_STYLE_LOADING_WAIT = parseInt(process.env.PROMISE_STYLE_LOADING_WAIT
 
 // layerId is used as "source[tile server path]" id, also used as panel css id
 // sourceLayer is used for vector dataset source layer, also used as "layer[mapbox layer parameter]" id
-// layerName is used to display in the list, also used as unique identity for one panel
+// layerName is used to display in the list, also used as unique identity for one panel, autocomplete
 export function initLayerSearchAutocomplete(data) {
     delete data.type;
     var autoList = Object.keys(data);
@@ -62,7 +62,6 @@ export function initLayerSearchAutocomplete(data) {
         let tmp = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
             return obj.value === value;
         });
-
         if (tmp.length === 1) {
             loadLayer({md5: tmp[0].md5});
         }else{

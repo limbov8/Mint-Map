@@ -45,13 +45,13 @@ window.loadMapLayers = function(mapboxgl){
             if (typeof ele !== "object") {
                 isValid = false; 
             }else{
-                if (!('md5' in ele)) {
+                if (!('md5' in ele || 'dataset_id' in ele)) {
                     isValid = false;            
                 }
             }
         });
         if (!isValid) {
-            console.error("Items in variables should be an object with format like {name: 'landuse', stdname: 'landuse-standard-name', md5: 'the-md5-hash-from-data-catalog', uri: 'the-uri-from-data-catalog'}")
+            console.error("Items in variables should be an object with format like {name: 'landuse', dataset_id: 'dataset_id'}")
             return false;
         }
         window._mintMap.variableArrayCount = variables.length;

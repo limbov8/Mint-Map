@@ -254,7 +254,7 @@ a{
     height: 85%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0 16px 0 0;
+    padding: 0 16px 200px 0;
     /*box-shadow: 0 0 6px rgba(0,0,0,.3);*/
 }
 .properties > div {

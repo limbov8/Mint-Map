@@ -170,19 +170,22 @@ export function updateListOfLayersNotAdded(json_id, removeFromList = true) {
 
         json = jsonArr[0];
     }
-    var sourceLayer = json.sourceLayer.replace(/\./g,'_');
+    // we change it to layerName
+    // var sourceLayer = json.sourceLayer.replace(/\./g,'_');
+    var filterValue = json.layerName;
+    var md5 = json.dcid.length > 1 ? json.dcid : json.md5vector;
     if (removeFromList) {
         window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
-            return obj.value !== sourceLayer;
+            return obj.value !== filterValue;
         });
     }else{
         window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {
-            return obj.value !== sourceLayer;
+            return obj.value !== filterValue;
         });
         if (!json.hasData) {
-            window._mintMap.listOfLayersNotAdded.unshift({label:sourceLayer + " (No data)", value: sourceLayer, md5: json.md5vector});
+            window._mintMap.listOfLayersNotAdded.unshift({label:filterValue + " (No data)", value: filterValue, md5: md5});
         }else{
-            window._mintMap.listOfLayersNotAdded.unshift({label:sourceLayer, value: sourceLayer, md5: json.md5vector});
+            window._mintMap.listOfLayersNotAdded.unshift({label:filterValue, value: filterValue, md5: md5});
         }
     }
     window._mintMap.autocomplete.list = window._mintMap.listOfLayersNotAdded;
