@@ -251,6 +251,8 @@ function loadLayerFromJson(json) {
         createProperitesPanel(json);
         if (json.hasTimeline) {
             setupSlider(json.layerId);
+            updateTimeLabel(json.layerId, json.layers.step[0]);
+            setLoadingIndicator(json.layerId, true);
         }
     }
     
@@ -429,10 +431,11 @@ function loadTilesOfTimeline(json) {
                 return;
             }
         }
-
         let colormap = i < json.colormap.length ? json.colormap[i] : json.colormap[0];
         window._mintMap.map.setPaintProperty(vectorMapboxLayerId, 'fill-color', JSON.parse(colormap));
     }
+    
+    setLoadingIndicator(json.layerId, false);
 }
 function playTimeseries(layerId) {
     window._mintMap.sliderData[layerId].intervalHandle = setInterval(function () {
@@ -457,6 +460,27 @@ function resetSlider(layerId) {
     pauseTimeseries(layerId);
     ele.noUiSlider.reset();
 }
+function updateTimeLabel(panelId, time) {
+    var ele = window._polymerMap.querySelector("#property-slider-" + panelId);
+    var timeLabel = ele.parentElement.querySelector(".slider-title-panel .time-label")
+    console.log(timeLabel);
+    if (timeLabel) {
+        timeLabel.innerHTML = time;
+    }
+}
+function setLoadingIndicator(panelId, show=true) {
+    var ele = window._polymerMap.querySelector("#property-slider-" + panelId);
+    var loadingIndicator = ele.parentElement.querySelector(".slider-title-panel .loading-indicator");
+    console.log(loadingIndicator);
+    if (loadingIndicator) {
+        if (show === false) {
+            loadingIndicator.style.display = 'none';
+        }else{
+            loadingIndicator.style.display = 'block';
+        }
+    }
+}
+
 function setupSlider(panelId) {
     var ele = window._polymerMap.querySelector("#property-slider-" + panelId);
     noUiSlider.create(ele, window._mintMap.sliderData[panelId]);
@@ -499,7 +523,7 @@ function setupSlider(panelId) {
         if (window._mintMap.mapInspect._popup.isOpen()) {
             window._mintMap.mapInspect._popup.remove();
         }
-
+        
         let currentOpacity = ele.parentElement.parentElement.querySelector('.opacity-slider').value;
         let layerOptions = window._mintMap.sliderData[panelId].extraOption;
         let step = d.format(layerOptions.stepOption.format.toUpperCase());
@@ -507,6 +531,7 @@ function setupSlider(panelId) {
         
         let legend = vindex < json.legend.length ? json.legend[vindex] : json.legend[0]; 
         updateLegend(json['legend-type'], JSON.parse(legend), json.sourceLayer, json.layerId, vindex);
+        updateTimeLabel(json.layerId, step);
 
         var curLayerName = json.sourceLayer + '_Layer_' + vindex;
         var vectorMapboxLayerId = curLayerName + '_vector';

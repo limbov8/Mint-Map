@@ -14,7 +14,8 @@ window._mintMap = {
     bounds: [22.4, 3.4, 37.0, 23.2],
     sliderData: {},
     loadedJson: [],
-    styleLoaded: false
+    styleLoaded: false,
+    styleLoadingIndicator: {}
 };
 
 window._mintMap.onresize = function() {
