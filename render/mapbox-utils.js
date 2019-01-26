@@ -12,7 +12,7 @@ export function removeLegend(layerId) {
     }
 }
 
-export function updateLegend(legendType, legend, sourceLayerName, layerId, legendIdx = -1) {
+export function updateLegend(legendType, legend, sourceLayerName, layerTitle, layerId, legendIdx = -1) {
     var legendElement = _mintMapShadowRoot.querySelector('#map-legend');
     // legendElement.innerHTML = '';
     var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + layerId);
@@ -27,7 +27,7 @@ export function updateLegend(legendType, legend, sourceLayerName, layerId, legen
 
     var legendTitle = document.createElement('div');
     legendTitle.className = 'legend-title'
-    legendTitle.innerHTML = "Legend of layer <span>#" + escape_shell(sourceLayerName) + "</span>:";
+    legendTitle.innerHTML = "Legend of layer <span>#" + escape_shell(layerTitle) + "</span>:";
     legendItem.appendChild(legendTitle);
 
     var legendContent = document.createElement('div');
@@ -172,7 +172,7 @@ export function updateListOfLayersNotAdded(json_id, removeFromList = true) {
     }
     // we change it to layerName
     // var sourceLayer = json.sourceLayer.replace(/\./g,'_');
-    var filterValue = json.layerName;
+    var filterValue = json.title;
     var md5 = json.dcid.length > 1 ? json.dcid : json.md5vector;
     if (removeFromList) {
         window._mintMap.listOfLayersNotAdded = window._mintMap.listOfLayersNotAdded.filter(function (obj) {

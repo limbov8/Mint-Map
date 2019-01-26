@@ -43,9 +43,9 @@ export function initLayerSearchAutocomplete(data) {
     for (var k in data) {
         if (data.hasOwnProperty(k)) {
             window._mintMap.listOfLayersNotAdded.push({
-                label: escape_shell(k), 
-                value: k,
-                md5: data[k]
+                label: data[k], 
+                value: data[k],
+                md5: k
             });
         }
     }
@@ -146,7 +146,7 @@ function addNewLayerToMap(json) {
     + (json.hasData ? "with-data-tag":"no-data-tag") 
     + "' data-id='" + json.id  
     + "'>" 
-    + escape_shell(json.layerName) + "<div class='tag_close'></div></a>";
+    + escape_shell(json.title) + "<div class='tag_close'></div></a>";
     var tagul = _mintMapShadowRoot.querySelector('#the-ul-of-layer-list');
     var tagSearch = _mintMapShadowRoot.querySelector('#the-li-of-add-new-layer');
     tagul.insertBefore(newLayer, tagSearch);
@@ -262,9 +262,9 @@ function loadLayerFromJson(json) {
     
     // window._mintMap.map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
     if (json.hasTimeline) {
-        updateLegend(json['legend-type'], JSON.parse(json.legend[0]), json.sourceLayer, json.layerId, 0);
+        updateLegend(json['legend-type'], JSON.parse(json.legend[0]), json.sourceLayer, json.title, json.layerId, 0);
     }else{
-        updateLegend(json['legend-type'], JSON.parse(json.legend), json.sourceLayer, json.layerId, 0);
+        updateLegend(json['legend-type'], JSON.parse(json.legend), json.sourceLayer, json.title, json.layerId, 0);
     }
     drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json.id);
     // addPropertySetting Panel
@@ -534,7 +534,7 @@ function setupSlider(panelId) {
         let vindex = layerOptions.step.indexOf(step);
         
         let legend = vindex < json.legend.length ? json.legend[vindex] : json.legend[0]; 
-        updateLegend(json['legend-type'], JSON.parse(legend), json.sourceLayer, json.layerId, vindex);
+        updateLegend(json['legend-type'], JSON.parse(legend), json.sourceLayer, json.title, json.layerId, vindex);
         updateTimeLabel(json.layerId, step);
 
         var curLayerName = json.sourceLayer + '_Layer_' + vindex;

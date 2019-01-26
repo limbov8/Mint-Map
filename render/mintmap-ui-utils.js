@@ -1,7 +1,8 @@
 import * as moment from 'moment';
 import * as wNumb from 'wnumb';
+
 export function escape_shell(text) {
-    return text.replace(/-_-/g, ' ').replace(/_\d+$/g,'')
+    return text.replace(/_\d+$/g,'')
 }
 // var moment = require('moment')
 // var wNumb = require('wnumb');
@@ -58,7 +59,7 @@ export function createProperitesPanel(json) {
         return;
     }
     var id = json.layerId;
-    var name = json.layerName;
+    var name = json.title;
     var rasterLayerId = json.sourceLayer + "_Layer";
 
     var layerProperty = document.createElement('div');
