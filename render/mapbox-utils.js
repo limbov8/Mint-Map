@@ -1,6 +1,6 @@
 import * as Awesomplete from 'awesomplete';
 // var Awesomplete = require('awesomplete');
-
+import escape_shell from './mintmap-ui-utils.js'
 var PROMISE_STYLE_LOADING_WAIT = parseInt(process.env.PROMISE_STYLE_LOADING_WAIT)
 var _mintMapShadowRoot = window._polymerMap;
 

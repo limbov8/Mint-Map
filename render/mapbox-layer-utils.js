@@ -3,7 +3,8 @@ import * as moment from 'moment';
 import * as noUiSlider from './noUiSliderRevised.js';
 import {
     createProperitesPanel,
-    updatePropertiesSettingBy
+    updatePropertiesSettingBy,
+    escape_shell
 } from './mintmap-ui-utils.js';
 import {
     removeLegend,
@@ -42,7 +43,7 @@ export function initLayerSearchAutocomplete(data) {
     for (var k in data) {
         if (data.hasOwnProperty(k)) {
             window._mintMap.listOfLayersNotAdded.push({
-                label: k, 
+                label: escape_shell(k), 
                 value: k,
                 md5: data[k]
             });
@@ -145,7 +146,7 @@ function addNewLayerToMap(json) {
     + (json.hasData ? "with-data-tag":"no-data-tag") 
     + "' data-id='" + json.id  
     + "'>" 
-    + json.layerName + "<div class='tag_close'></div></a>";
+    + escape_shell(json.layerName) + "<div class='tag_close'></div></a>";
     var tagul = _mintMapShadowRoot.querySelector('#the-ul-of-layer-list');
     var tagSearch = _mintMapShadowRoot.querySelector('#the-li-of-add-new-layer');
     tagul.insertBefore(newLayer, tagSearch);

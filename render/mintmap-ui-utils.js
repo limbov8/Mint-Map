@@ -1,5 +1,8 @@
 import * as moment from 'moment';
 import * as wNumb from 'wnumb';
+export function escape_shell(text) {
+    return text.replace(/-_-/g, ' ').replace(/_\d+$/g,'')
+}
 // var moment = require('moment')
 // var wNumb = require('wnumb');
 export function initUI() {
@@ -62,7 +65,7 @@ export function createProperitesPanel(json) {
     layerProperty.setAttribute('id','layerById-' + id);
     layerProperty.className="card";
     layerProperty.style.display = "none";
-    layerProperty.innerHTML = "<h3>" + name + " Layer Properties</h3>" 
+    layerProperty.innerHTML = "<h3>" + escape_shell(name) + " Layer Properties</h3>" 
                              + "<div class='props'>" 
                              + "<h4>Opacity</h4>" 
                              + "<div class='control'>" 
