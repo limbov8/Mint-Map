@@ -318,7 +318,9 @@ function loadSingleLayer(json) {
             return;
         }
     }
-
+// console.log(json.sourceLayer);
+// console.log(vectorMapboxLayerId);
+// console.log([server + vectorMD5 + tile_path + '.pbf']);
     if (!window._mintMap.map.getLayer(vectorMapboxLayerId)) {
         window._mintMap.styleLoaded = false;
         window._mintMap.map.addLayer({
@@ -412,6 +414,7 @@ function loadTilesOfTimeline(json) {
         }
         
         if (!window._mintMap.map.getLayer(vectorMapboxLayerId)) {
+
             window._mintMap.styleLoaded = false;
             window._mintMap.map.addLayer({
                 "id": vectorMapboxLayerId,
@@ -464,7 +467,7 @@ function resetSlider(layerId) {
 function updateTimeLabel(panelId, time) {
     var ele = window._polymerMap.querySelector("#property-slider-" + panelId);
     var timeLabel = ele.parentElement.querySelector(".slider-title-panel .time-label")
-    console.log(timeLabel);
+    // console.log(timeLabel);
     if (timeLabel) {
         timeLabel.innerHTML = time;
     }
@@ -472,7 +475,7 @@ function updateTimeLabel(panelId, time) {
 function setLoadingIndicator(panelId, show=true) {
     var ele = window._polymerMap.querySelector("#property-slider-" + panelId);
     var loadingIndicator = ele.parentElement.querySelector(".slider-title-panel .loading-indicator");
-    console.log(loadingIndicator);
+    // console.log(loadingIndicator);
     if (loadingIndicator) {
         if (show === false) {
             loadingIndicator.style.display = 'none';

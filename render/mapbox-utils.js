@@ -1,6 +1,6 @@
 import * as Awesomplete from 'awesomplete';
 // var Awesomplete = require('awesomplete');
-import escape_shell from './mintmap-ui-utils.js'
+import {escape_shell} from './mintmap-ui-utils.js'
 var PROMISE_STYLE_LOADING_WAIT = parseInt(process.env.PROMISE_STYLE_LOADING_WAIT)
 var _mintMapShadowRoot = window._polymerMap;
 
@@ -27,7 +27,7 @@ export function updateLegend(legendType, legend, sourceLayerName, layerId, legen
 
     var legendTitle = document.createElement('div');
     legendTitle.className = 'legend-title'
-    legendTitle.innerHTML = "Legend of layer <span>#" + sourceLayerName + "</span>:";
+    legendTitle.innerHTML = "Legend of layer <span>#" + escape_shell(sourceLayerName) + "</span>:";
     legendItem.appendChild(legendTitle);
 
     var legendContent = document.createElement('div');
