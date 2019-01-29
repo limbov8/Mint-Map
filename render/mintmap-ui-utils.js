@@ -83,7 +83,7 @@ export function createProperitesPanel(json) {
             return;
         }
         
-        if (json.layers.step.length <= 1) {
+        if (json.layers.step.length < 1) {
             console.error("There are only one time stamp in the Timeseries");
             return;
         }
@@ -95,7 +95,7 @@ export function createProperitesPanel(json) {
                              + '<a class="play-slider" href="#"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEcSURBVEhL3dU/S0JRGMfxawputTg0CYKrS4KD+gJ6CdEWTqKDBAnOjg45OejoVHtb0JCEQRC4+A6EdlEoor7PPYjd65/ufe6FG/3gA885gz+uHM6x/mWyGOEDXwEscYtDbOQRNcTtlT5JDHBtr1yRLwhasEoeL2Z0Rj41rOQwMaMzkZc0cWpGT1GV9PCOIVKy8UvUJZfoYIZz7Iu6pGpG6wSvuENaNrYkcIkkgRbeUMcBfiaUklXkQHyiYq/WCaXkGHJ1TFGWDVcClcRwAfmb2pArZFvUJXKy7vEM+ZF9UZfM0YCX+01VcoaMGT1FVeI30ZYssOu0+E0RT2Z05gZ9FCCPjlYJD7jCRo7QxRjyqmnJMy4FYb2yfyaW9Q1xY2SBkW6i0gAAAABJRU5ErkJggg=="></a></div>'
                              + '<div class="lds-css ng-scope loading-indicator"><div style="width:100%;height:100%" class="lds-flickr"><div></div><div></div><div></div></div></div>'
                              + '</div>'
-                             + '<div class="property-slider" id="property-slider-'+ id
+                             + '<div class="property-slider" id="property-slider-' + id
                              // layerids is sourcelayer id!!!
                              +'" data-panel="' + id + '"><div>'
                              + "</div>";
