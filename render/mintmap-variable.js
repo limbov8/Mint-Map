@@ -1,4 +1,4 @@
-import {loadLayer} from './mapbox-layer-utils.js';
+import {loadLayer, removeAllLayerFromMap} from './mapbox-layer-utils.js';
 // var {
 //     loadLayer
 // } = require('./mapbox-layer-utils.js');
@@ -11,7 +11,8 @@ function handle_variable() {
     if (window._mintMap.variableArray.length === 0) {
         return;
     }
-
+    removeAllLayerFromMap();
+    
     for (var i = 0; i < window._mintMap.variableArray.length; i++) {
         if (window._mintMap.variableArray[i].hasOwnProperty('dataset_id')) {
             loadLayer({md5:window._mintMap.variableArray[i].dataset_id});

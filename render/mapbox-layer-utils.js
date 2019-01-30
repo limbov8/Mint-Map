@@ -155,6 +155,11 @@ function addNewLayerToMap(json) {
     return true;
 
 }
+export function removeAllLayerFromMap() {
+    window._mintMap.loadedJson.map(function (json) {
+        removeLayerFromMap(json.id)
+    });
+}
 export function removeLayerFromMap(json_id) {
     var jsonArr = window._mintMap.loadedJson.filter(function (obj) {
         return obj.id === json_id;
