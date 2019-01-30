@@ -157,7 +157,10 @@ function addNewLayerToMap(json) {
 }
 export function removeAllLayerFromMap() {
     window._mintMap.loadedJson.map(function (json) {
-        removeLayerFromMap(json.id)
+        let ele = _mintMapShadowRoot.querySelector("#the-ul-of-layer-list a.with-data-tag[data-id='"+json.id+"'] .tag_close");
+        if (ele) {
+            ele.click();
+        }
     });
 }
 export function removeLayerFromMap(json_id) {
