@@ -113,7 +113,8 @@ export function createProperitesPanel(json) {
             if (idx === 0 || idx === yearsLength) {
                 return;
             }
-            let percent = Math.ceil((year - years[0])/yearDiff*100) + "%";
+            // let percent = Math.ceil((year - years[0])/yearDiff*100) + "%";
+            let percent = (year - years[0])/yearDiff*100 + "%";
             // if( yearsLength <= 12){
             yearRange[percent] = [year];
             // }else{
@@ -125,8 +126,9 @@ export function createProperitesPanel(json) {
         // console.log("yearRange",yearRange);
         let yearRangeRemainer = parseInt( moment(yearRange.min[0]).format(timeLineData.stepOption.format) ) % 2;
         // let dividend = 20000000;
-        let yearRangeRemainer30 = parseInt( moment(yearRange.min[0]).format('DD') );
+        // let yearRangeRemainer30 = parseInt( moment(yearRange.min[0]).format('DD') );
         // console.log(yearRange,yearRangeRemainer);
+        // console.log(jsonSteps);
         window._mintMap.sliderData[json.layerId] = {
                 animate: true,
                 animationDuration: 300,
@@ -140,11 +142,24 @@ export function createProperitesPanel(json) {
                 }),
                 pips: {
                     mode: 'steps',
-                    density: 3,
+                    density: 12,
                     filter: function (value, type) {
-                        if (yearsLength >= 24) {
-                            let tmp = parseInt( moment(value).format('DD'));
-                            return tmp == yearRangeRemainer30 ? 1 : 0;
+                        if (yearsLength >= 48) {
+                            let tmp =  moment(value).format(timeLineData.stepOption.format);
+                            let position = jsonSteps.indexOf(tmp);
+                            let q = parseInt(yearsLength/6);
+                            if (position === -1) {
+                                return 0;
+                            }
+                            return position % q === 0 ? 1 : 0;
+                        }else if (yearsLength >= 24 && yearsLength < 48) {
+                            let tmp =  moment(value).format(timeLineData.stepOption.format);
+                            let position = jsonSteps.indexOf(tmp);
+                            // console.log(tmp);
+                            if (position === -1) {
+                                return 0;
+                            }
+                            return position % 2 === 0 ? 1 : 0;
                         }else if (yearsLength > 12 && yearsLength < 24) {
                             let tmp = parseInt( moment(value).format(timeLineData.stepOption.format));
                             return tmp % 2 == yearRangeRemainer ? 1 : 0;
