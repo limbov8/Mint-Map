@@ -109,7 +109,7 @@ export function drawOriginalBound(coordinates, id) {
             'layout': {},
             'paint': {
                 'line-width':2,
-                'line-color':'#000',
+                'line-color':'#007cbf',
                 'line-opacity':0.8
                 // 'fill-color': '#e8e8e8',
                 // 'fill-opacity': 0.6
