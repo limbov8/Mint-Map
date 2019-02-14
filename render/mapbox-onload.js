@@ -1,4 +1,4 @@
-import { initUI, createProperitesPanel } from './mintmap-ui-utils.js';
+import { initUI } from './mintmap-ui-utils.js';
 import * as MapboxInspect from 'mapbox-gl-inspect';
 import mapboxInspectToolkit from './mapbox-inspect.js';
 import {initLayerSearchAutocomplete} from './mapbox-layer-utils.js';

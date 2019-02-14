@@ -46,14 +46,22 @@ var mapboxInspectToolkit = {
         // var typeProperty = '';//self.renderProperty('$type', feature.geometry.type);
         var layersElements = [];
         Object.keys(getModeForEachLayer).map(function (layerName) {
-            var layerElement= self.renderLayer(layerName);
+            var layerElement = self.renderLayer(layerName);
             var oneLayerElement = [];
-            Object.keys(getModeForEachLayer[layerName]).map(function (propertyName) {
-                var modeValue = self.getMode(getModeForEachLayer[layerName][propertyName]);
+            if (layerName in window._mintMap.geojson_layers_need_special_inspection) {
+                let current_property_name = window._mintMap.geojson_dot_map_layers_need_special_attention_for_inspection[layerName];
+                var modeValue = self.getMode(getModeForEachLayer[layerName][current_property_name]);
                 if (modeValue!=null) {
-                     oneLayerElement.push(layerElement + self.renderProperty(propertyName, modeValue));
+                     oneLayerElement.push(layerElement + self.renderProperty(current_property_name, modeValue));
                 }
-            })
+            }else{
+                Object.keys(getModeForEachLayer[layerName]).map(function (propertyName) {
+                    var modeValue = self.getMode(getModeForEachLayer[layerName][propertyName]);
+                    if (modeValue!=null) {
+                         oneLayerElement.push(layerElement + self.renderProperty(propertyName, modeValue));
+                    }
+                })
+            }
             layersElements.push(oneLayerElement.join(''));
         });
         return layersElements.join('');

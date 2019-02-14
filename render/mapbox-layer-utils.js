@@ -123,7 +123,16 @@ export function loadLayer({ md5 = null, dcid = null} = {}) {
     }).catch(error => console.warn(error));
     return true;
 }
-
+function isGeoJSONLayer(json) {
+    if (!('layer_type' in json)) {
+        return false;
+    }
+    if (json.layer_type > 200) {
+        return true;
+    }else{
+        return false;
+    }
+}
 function loadLayerFromJsonPrefix(json) {
     var hasLayer = addNewLayerToMap(json);
     
@@ -150,7 +159,11 @@ function addNewLayerToMap(json) {
     var tagul = _mintMapShadowRoot.querySelector('#the-ul-of-layer-list');
     var tagSearch = _mintMapShadowRoot.querySelector('#the-li-of-add-new-layer');
     tagul.insertBefore(newLayer, tagSearch);
-    loadLayerFromJson(json);
+    if (isGeoJSONLayer()) {
+        loadGeoJSONLayerFromJson(json);
+    }else{
+        loadLayerFromJson(json);
+    }
 
     return true;
 
@@ -234,6 +247,31 @@ function removeInspectLayers(curLayerName) {
         }
     }
 }
+function loadGeoJSONLayerFromJson(json) {
+    let layerId = json.layerId;
+    let vectorServerSourceId = layerId;
+    var curLayerName = json.sourceLayer + "_Layer";
+    let vectorMapboxLayerId = curLayerName + '_vector';
+
+    loadSingleGeojsonLayer(json);
+    // The first one
+    updateInspectLayers(vectorMapboxLayerId);
+
+    // window._mintMap.displayed.push(vectorMD5);
+
+    var ele = _mintMapShadowRoot.querySelector('#layerById-' + json.layerId);
+    if ( !ele ) {
+        createProperitesPanel(json, true);
+        if (json.hasTimeline) {
+            setupSlider(json.layerId);
+            updateTimeLabel(json.layerId, json.layers.step[0]);
+        }
+        setLoadingIndicator(json.layerId, true);
+    }
+    
+    updatePropertiesSettingBy(json, false);
+    updateListOfLayersNotAdded(json, true);
+}
 function loadLayerFromJson(json) {
 
     let layerId = json.layerId;
@@ -257,7 +295,7 @@ function loadLayerFromJson(json) {
 
     var ele = _mintMapShadowRoot.querySelector('#layerById-' + json.layerId);
     if ( !ele ) {
-        createProperitesPanel(json);
+        createProperitesPanel(json, false);
         if (json.hasTimeline) {
             setupSlider(json.layerId);
             updateTimeLabel(json.layerId, json.layers.step[0]);
@@ -277,10 +315,137 @@ function loadLayerFromJson(json) {
     drawOriginalBound(JSON.parse(json.originalDatasetCoordinate), json.id);
     // addPropertySetting Panel
 }
+
+function loadSingleGeojsonLayer(json) {
+    let tile_path = window._mintMap.metadata.tiles;
+    let server = window._mintMap.metadata.server;
+    let vectorMD5 = json.md5vector;
+    
+    let layerId = json.layerId;
+    let vectorServerSourceId = layerId;
+    
+    var curLayerName = json.sourceLayer + "_Layer";
+    let vectorMapboxLayerId = curLayerName + '_vector';
+
+
+    if (!window._mintMap.map.getSource(vectorServerSourceId)) {
+        window._mintMap.map.addSource(vectorServerSourceId,{
+            type: 'vector',
+            tiles: [server + vectorMD5 + tile_path + '.pbf'],
+            minzoom: 3,
+            maxzoom: 7
+        });
+    }
+    // Scalability
+    //  all the saved op in this part, could be done on the server
+    //  we also need to mark the position we need to change
+    if (json['legend-type'] === 'none') {
+        let vector_layer_types = ['_circle', '_line', '_polygon']
+        let vector_layer_types_fill = ['circle', 'line', 'fill']
+        let filter_types = window._mintMap.vector_layer_filter_types;
+        let vector_layer_paint_settings = window._mintMap.geojson_layer_paint_settings;
+        
+        // save all in json, only save once.
+        json.geojson_paint_settings = vector_layer_paint_settings;
+        json.geojson_layer_types = vector_layer_types;
+        json.geojson_layer_paint_types = vector_layer_types_fill;
+        json.geojson_filter_types =  filter_types;
+        json.geojson_paint_opacity_property_names = window._mintMap.vector_layer_opacity_names;
+        json.geojson_vector_layer_ids = []
+        
+        for (var idx = 0; idx < vector_layer_types.length; idx++) {
+            let vector_types = vectorMapboxLayerId + vector_layer_types[idx];
+            json.geojson_vector_layer_ids.push(vector_types);
+            if (!window._mintMap.map.getLayer(vector_types)) {
+                window._mintMap.styleLoaded = false;
+                window._mintMap.map.addLayer({
+                    "id": vector_types,
+                    ...filter_types[idx],
+                    "type": vector_layer_types_fill[idx],
+                    "source": vectorServerSourceId,
+                    "source-layer": json.sourceLayer,
+                    "layout": {
+                        'visibility': 'visible'
+                    },
+                    "paint": vector_layer_paint_settings[idx]
+                });
+                if (!window._mintMap.styleLoaded) {
+                    setTimeout(function () {
+                        loadSingleGeojsonLayer(json);
+                    }, PROMISE_STYLE_LOADING_WAIT);
+                    return;
+                }
+            }
+        }
+
+    }else{
+        let colormap = typeof(json.colormap) === 'string' ? json.colormap : json.colormap[0] ;
+        let pl_type = get_paint_type_and_layer_type(colormap);
+        
+        let paint_settings = JSON.parse(colormap);
+
+        let legend = JSON.parse( typeof(json.legend) === 'string' ? json.legend : json.legend[0] );
+        let steps = json.layers.step;
+
+        // save all in json, save once for one json
+        json.geojson_paint_settings = [paint_settings];
+        json.geojson_layer_types = [pl_type.layer_type];
+        json.geojson_layer_paint_types = [pl_type.paint_type];
+        json.geojson_filter_types = [filter_types];
+        json.geojson_paint_opacity_property_names = [pl_type.opacity_name];
+        json.geojson_vector_layer_ids = []
+
+        let vector_type = vectorMapboxLayerId + pl_type.layer_type;
+        json.geojson_vector_layer_ids.push(vector_type)
+        if (!window._mintMap.map.getLayer(vector_type)) {
+            window._mintMap.styleLoaded = false;
+            window._mintMap.map.addLayer({
+                "id": vector_type,
+                ...pl_type.filter_type,
+                "type": pl_type.paint_type,
+                "source": vectorServerSourceId,
+                "source-layer": json.sourceLayer,
+                "layout": {
+                    'visibility': 'visible'
+                },
+                "paint": paint_settings
+            });
+            if (!window._mintMap.styleLoaded) {
+                setTimeout(function () {
+                    loadSingleGeojsonLayer(json);
+                }, PROMISE_STYLE_LOADING_WAIT);
+                return;
+            }
+        }
+
+        updateLegend(json['legend-type'], legend, json.sourceLayer, json.title, json.layerId, 0);
+        // updateTimeLabel(json.layerId, steps[0]);
+        window._mintMap.geojson_dot_map_layers_need_special_attention_for_inspection[json.sourceLayer] = 'v_0';
+    }
+    setLoadingIndicator(json.layerId, false);
+}
+function get_paint_type_and_layer_type(colormap) {
+    let paint_type = 'circle';
+    let vector_layer_type = '_circle';
+    let filter_type = window._mintMap.vector_layer_filter_types[0]
+    let opacity_name = window._mintMap.vector_layer_opacity_names[0]
+    if (colormap.indexOf('line-') !== -1) {
+        paint_type = 'line';
+        vector_layer_type = '_line';
+        filter_type = window._mintMap.vector_layer_filter_types[1]
+        opacity_name = window._mintMap.vector_layer_opacity_names[1]
+    }else if (colormap.indexof('fill-') !== -1) {
+        paint_type = 'fill';
+        vector_layer_type = '_polygon';
+        filter_type = window._mintMap.vector_layer_filter_types[2]
+        opacity_name = window._mintMap.vector_layer_opacity_names[2]
+    }
+    return {paint_type:paint_type, layer_type:vector_layer_type, filter_type:filter_type, opacity_name:opacity_name}
+}
 function loadSingleLayer(json) {
     let tile_path = window._mintMap.metadata.tiles;
-    // let server = window._mintMap.metadata.server;
-    let server = "http://mintviz.org:65530/"; //for test
+    let server = window._mintMap.metadata.server;
+    // let server = "http://mintviz.org:65530/"; //for test
     let vectorMD5 = json.md5vector;
     let rasterMD5 = json.md5raster;
 
@@ -369,8 +534,8 @@ function loadTilesOfTimeline(json) {
         console.error("There are only one time stamp in the Timeseries");
         return;
     }
-    // let server = window._mintMap.metadata.server;
-    let server = 'http://mintviz.org:65530/'; // for test
+    let server = window._mintMap.metadata.server;
+    // let server = 'http://mintviz.org:65530/'; // for test
     let tile_path = window._mintMap.metadata.tiles;
     for (var i = 1; i < json.layers.step.length; i++) {
         let vectorMd5 = json.md5vector + "_" + i;
@@ -543,19 +708,55 @@ function setupSlider(panelId) {
         let step = d.format(layerOptions.stepOption.format.toUpperCase());
         let vindex = layerOptions.step.indexOf(step);
         
-        let legend = vindex < json.legend.length ? json.legend[vindex] : json.legend[0]; 
-        updateLegend(json['legend-type'], JSON.parse(legend), json.sourceLayer, json.title, json.layerId, vindex);
-        updateTimeLabel(json.layerId, step);
 
         var curLayerName = json.sourceLayer + '_Layer_' + vindex;
         var vectorMapboxLayerId = curLayerName + '_vector';
         var rasterMapboxLayerId = curLayerName + '_raster';
-        
+
+        // Handle geojson Setup noUiSlider
+        if (isGeoJSONLayer(json)) {
+            // dot map value/interpolation
+            let dm_value = 'v_' + vindex;
+            let dm_interpo = 'i_' + vindex;
+            // update for inspection
+            window._mintMap.geojson_dot_map_layers_need_special_attention_for_inspection[json.sourceLayer] = dm_value;
+            // get paint setting used to update new one
+            // since we only got dot map for now, we will not travese paint_settings
+            // if traverse paint_settings, we need to store all the position we need to change
+            let paint_settings = json.geojson_paint_settings[0];
+            // get all geojson_layer_ids for circles/lines/polygons, maybe one or more
+            let geojson_vector_layer_ids = json.geojson_vector_layer_ids;
+            // limited on circle paint settings and dot map eg: river size
+            // 'circle-color': ['interpolate', ['linear'], ['get', 'v_0'], 0, '#FCA107', 46, '#7F3121']
+            paint_settings['circle-color'][2][1] = dm_value;
+            // 'circle-stroke-width':['case',['get','i_0'],1,['!',['get','i_0']],0,0]
+            paint_settings['circle-stroke-width'][1][1] = dm_interpo;
+            paint_settings['circle-stroke-width'][3][1][1] = dm_interpo;
+            // 'circle-opacity':0.8
+            paint_settings['circle-opacity'] = parseInt(currentOpacity, 10) / 100;
+            // TODO: opacity vector...
+            // 'circle-radius':['interpolate',['linear'],['get','v_0'],0,2,46,20]}
+            paint_settings['circle-radius'][2][1] = dm_value;
+
+            // for the future scalability
+            for (var gid = 0; gid < geojson_vector_layer_ids.length; gid++) {
+                for(k in paint_settings){
+                    window._mintMap.map.setPaintProperty(geojson_vector_layer_ids[gid], k, paint_settings[k]);
+                }
+            }
+            return;
+        }
+        // handle double layer slider
+        let legend = vindex < json.legend.length ? json.legend[vindex] : json.legend[0]; 
+        updateLegend(json['legend-type'], JSON.parse(legend), json.sourceLayer, json.title, json.layerId, vindex);
+        updateTimeLabel(json.layerId, step);
+        // if data-time is no, then the opacity will alway the first one layer
         ele.parentElement.parentElement.querySelector('.opacity-slider').setAttribute('data-time', vindex);
         if (step === layerOptions.step[0]) {
             curLayerName = json.sourceLayer + '_Layer';
             vectorMapboxLayerId = curLayerName + '_vector';
             rasterMapboxLayerId = curLayerName + '_raster';
+            // change data-time to no
             ele.parentElement.parentElement.querySelector('.opacity-slider').setAttribute('data-time', "no");
         }
 

@@ -49,7 +49,7 @@ export function initUI() {
 
     window._polymerMap.querySelector('.geocoder').appendChild(layersWrapper);
 }
-export function createProperitesPanel(json) {
+export function createProperitesPanel(json, isGeojsonLayer=false) {
 
     // var layersPropertyList = document.createElement('div');
     // layersPropertyList.className = "properties";
@@ -66,7 +66,20 @@ export function createProperitesPanel(json) {
     layerProperty.setAttribute('id','layerById-' + id);
     layerProperty.className="card";
     layerProperty.style.display = "none";
-    layerProperty.innerHTML = "<h3>" + escape_shell(name) + " Layer Properties</h3>" 
+    if (isGeojsonLayer) {
+        let layer_ids = json.geojson_vector_layer_ids.join(',');
+        let layer_paint_opacity_names = json.geojson_paint_opacity_property_names.join(',');
+        layerProperty.innerHTML = "<h3>" + escape_shell(name) + " Layer Properties</h3>" 
+                             + "<div class='props'>" 
+                             + "<h4>Opacity</h4>" 
+                             + "<div class='control'>" 
+                             + "<input type='range' min='1' max='100' value='80' class='slider opacity-slider' " 
+                             + "data-time='no' "
+                             + "oninput='window._mintMap.setOpacity(\""+layer_ids
+                             + "\", this.value, \"no\", '" + layer_paint_opacity_names + "')'>"
+                             + "</div>";
+    }else{
+        layerProperty.innerHTML = "<h3>" + escape_shell(name) + " Layer Properties</h3>" 
                              + "<div class='props'>" 
                              + "<h4>Opacity</h4>" 
                              + "<div class='control'>" 
@@ -74,6 +87,7 @@ export function createProperitesPanel(json) {
                              + "data-time='no' "
                              + "oninput='window._mintMap.setOpacity(\""+rasterLayerId+"\", this.value, this.getAttribute(\"data-time\"))'>"
                              + "</div>";
+    }
     if (json.hasTimeline) {
         // console.log(layersIds[i],window._mintMap.metadata.layers);
         // layerids is sourcelayer id!!!
