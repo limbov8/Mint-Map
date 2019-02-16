@@ -7,7 +7,7 @@ var _mintMapShadowRoot = window._polymerMap;
 export function removeLegend(layerId) {
 
     var legendItem = _mintMapShadowRoot.querySelector('#map-legend .legend-of-' + layerId);
-    if (legendItem.parentElement) {
+    if (legendItem && legendItem.parentElement) {
         legendItem.parentElement.removeChild(legendItem);
     }
 }

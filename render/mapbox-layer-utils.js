@@ -193,16 +193,30 @@ export function removeLayerFromMap(json_id) {
     if (json.hasTimeline) {
         resetSlider(json.layerId);
     }
-    removeBoundary(json.id);
-
-    if (window._mintMap.map.getLayer(vectorMapboxLayerId)) {
-        window._mintMap.map.removeLayer(vectorMapboxLayerId);
-        window._mintMap.map.removeLayer(rasterMapboxLayerId);
-        removeLegend(json.layerId);
-        removeInspectLayers(vectorMapboxLayerId);
-        updatePropertiesSettingBy(json);
+    if (!isGeoJSONLayer(json)) {
+        removeBoundary(json.id);
     }
-    if (json.hasTimeline) {
+    if (isGeoJSONLayer(json)) {
+        for (var idx_of_layer_id = 0; idx_of_layer_id < json.geojson_vector_layer_ids.length; idx_of_layer_id++) {
+            let tmp_layer_id = json.geojson_vector_layer_ids[idx_of_layer_id];
+            if (window._mintMap.map.getLayer(tmp_layer_id)) {
+                window._mintMap.map.removeLayer(tmp_layer_id);
+                removeInspectLayers(tmp_layer_id);
+            }
+        }
+        removeLegend(json.layerId);
+        updatePropertiesSettingBy(json);
+    }else{
+        if (window._mintMap.map.getLayer(vectorMapboxLayerId)) {
+            window._mintMap.map.removeLayer(vectorMapboxLayerId);
+            window._mintMap.map.removeLayer(rasterMapboxLayerId);
+            removeLegend(json.layerId);
+            removeInspectLayers(vectorMapboxLayerId);
+            updatePropertiesSettingBy(json);
+        }        
+    }
+
+    if (json.hasTimeline && !isGeoJSONLayer(json)) {
         let jsonSteps = json.layers.step;
         if (typeof(jsonSteps) === "undefined" ) {
             console.error("This metadata is not designed for timeline");
