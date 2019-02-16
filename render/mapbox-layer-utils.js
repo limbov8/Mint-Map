@@ -250,12 +250,10 @@ function removeInspectLayers(curLayerName) {
 function loadGeoJSONLayerFromJson(json) {
     let layerId = json.layerId;
     let vectorServerSourceId = layerId;
-    var curLayerName = json.sourceLayer + "_Layer";
-    let vectorMapboxLayerId = curLayerName + '_vector';
+    // var curLayerName = json.sourceLayer + "_Layer";
+    // let vectorMapboxLayerId = curLayerName + '_vector';
 
     loadSingleGeojsonLayer(json);
-    // The first one
-    updateInspectLayers(vectorMapboxLayerId);
 
     // window._mintMap.displayed.push(vectorMD5);
 
@@ -265,8 +263,8 @@ function loadGeoJSONLayerFromJson(json) {
         if (json.hasTimeline) {
             setupSlider(json.layerId);
             updateTimeLabel(json.layerId, json.layers.step[0]);
+            setLoadingIndicator(json.layerId, true);
         }
-        setLoadingIndicator(json.layerId, true);
     }
     
     updatePropertiesSettingBy(json, false);
@@ -305,7 +303,7 @@ function loadLayerFromJson(json) {
     
     updatePropertiesSettingBy(json, false);
     updateListOfLayersNotAdded(json, true);
-    
+    console.log(json)
     // window._mintMap.map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
     if (json.hasTimeline) {
         updateLegend(json['legend-type'], JSON.parse(json.legend[0]), json.sourceLayer, json.title, json.layerId, 0);
@@ -319,7 +317,7 @@ function loadLayerFromJson(json) {
 function loadSingleGeojsonLayer(json) {
     let tile_path = window._mintMap.metadata.tiles;
     // let server = window._mintMap.metadata.server;
-    let server = "http://http://[::]:8080/data"; //for test
+    let server = "http://[::]:8080/data/"; //for test
     let vectorMD5 = json.md5vector;
     
     let layerId = json.layerId;
@@ -423,7 +421,13 @@ function loadSingleGeojsonLayer(json) {
         // updateTimeLabel(json.layerId, steps[0]);
         window._mintMap.geojson_dot_map_layers_need_special_attention_for_inspection[json.sourceLayer] = 'v_0';
     }
-    setLoadingIndicator(json.layerId, false);
+    if (json.hasTimeline) {
+        setLoadingIndicator(json.layerId, false);
+    }
+
+    for (var i = 0; i < json.geojson_vector_layer_ids.length; i++) {
+        updateInspectLayers(json.geojson_vector_layer_ids[i]);    
+    }
 }
 function get_paint_type_and_layer_type(colormap) {
     let paint_type = 'circle';
@@ -446,7 +450,7 @@ function get_paint_type_and_layer_type(colormap) {
 function loadSingleLayer(json) {
     let tile_path = window._mintMap.metadata.tiles;
     // let server = window._mintMap.metadata.server;
-    let server = "http://http://[::]:8080/data"; //for test
+    let server = "http://[::]:8080/data/"; //for test
     let vectorMD5 = json.md5vector;
     let rasterMD5 = json.md5raster;
 
@@ -535,7 +539,8 @@ function loadTilesOfTimeline(json) {
         console.error("There are only one time stamp in the Timeseries");
         return;
     }
-    let server = window._mintMap.metadata.server;
+    // let server = window._mintMap.metadata.server;
+    let server = "http://[::]:8080/data/"; //for test
     // let server = 'http://mintviz.org:65530/'; // for test
     let tile_path = window._mintMap.metadata.tiles;
     for (var i = 1; i < json.layers.step.length; i++) {

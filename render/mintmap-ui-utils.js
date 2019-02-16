@@ -76,7 +76,7 @@ export function createProperitesPanel(json, isGeojsonLayer=false) {
                              + "<input type='range' min='1' max='100' value='80' class='slider opacity-slider' " 
                              + "data-time='no' "
                              + "oninput='window._mintMap.setOpacity(\""+layer_ids
-                             + "\", this.value, \"no\", '" + layer_paint_opacity_names + "')'>"
+                             + "\", this.value, \"no\", \"" + layer_paint_opacity_names + "\")'>"
                              + "</div>";
     }else{
         layerProperty.innerHTML = "<h3>" + escape_shell(name) + " Layer Properties</h3>" 

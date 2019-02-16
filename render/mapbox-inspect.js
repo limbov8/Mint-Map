@@ -47,8 +47,8 @@ var mapboxInspectToolkit = {
         var layersElements = [];
         Object.keys(getModeForEachLayer).map(function (layerName) {
             var layerElement = self.renderLayer(layerName);
-            var oneLayerElement = [];
-            if (layerName in window._mintMap.geojson_layers_need_special_inspection) {
+            var oneLayerElement = [layerElement];
+            if (layerName in window._mintMap.geojson_dot_map_layers_need_special_attention_for_inspection) {
                 let current_property_name = window._mintMap.geojson_dot_map_layers_need_special_attention_for_inspection[layerName];
                 var modeValue = self.getMode(getModeForEachLayer[layerName][current_property_name]);
                 if (modeValue!=null) {
@@ -58,7 +58,7 @@ var mapboxInspectToolkit = {
                 Object.keys(getModeForEachLayer[layerName]).map(function (propertyName) {
                     var modeValue = self.getMode(getModeForEachLayer[layerName][propertyName]);
                     if (modeValue!=null) {
-                         oneLayerElement.push(layerElement + self.renderProperty(propertyName, modeValue));
+                         oneLayerElement.push(self.renderProperty(propertyName, modeValue));
                     }
                 })
             }
