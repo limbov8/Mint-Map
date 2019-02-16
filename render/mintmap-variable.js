@@ -11,7 +11,7 @@ function handle_variable() {
     if (window._mintMap.variableArray.length === 0) {
         return;
     }
-    console.log('removeAllLayerFromMap');
+    // console.log('removeAllLayerFromMap');
     removeAllLayerFromMap();
 
     for (var i = 0; i < window._mintMap.variableArray.length; i++) {

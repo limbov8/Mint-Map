@@ -303,7 +303,7 @@ function loadLayerFromJson(json) {
     
     updatePropertiesSettingBy(json, false);
     updateListOfLayersNotAdded(json, true);
-    console.log(json)
+    // console.log(json)
     // window._mintMap.map.setPaintProperty('landuseLayer', 'fill-color',styleExpression);
     if (json.hasTimeline) {
         updateLegend(json['legend-type'], JSON.parse(json.legend[0]), json.sourceLayer, json.title, json.layerId, 0);
@@ -351,10 +351,12 @@ function loadSingleGeojsonLayer(json) {
         json.geojson_filter_types =  filter_types;
         json.geojson_paint_opacity_property_names = window._mintMap.vector_layer_opacity_names;
         json.geojson_vector_layer_ids = []
-        
         for (var idx = 0; idx < vector_layer_types.length; idx++) {
             let vector_types = vectorMapboxLayerId + vector_layer_types[idx];
             json.geojson_vector_layer_ids.push(vector_types);
+        }
+        for (var idx = 0; idx < json.geojson_vector_layer_ids.length; idx++) {
+            let vector_types = json.geojson_vector_layer_ids[idx];
             if (!window._mintMap.map.getLayer(vector_types)) {
                 window._mintMap.styleLoaded = false;
                 window._mintMap.map.addLayer({

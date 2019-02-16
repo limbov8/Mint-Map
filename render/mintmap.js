@@ -69,7 +69,7 @@ window._mintMap.setOpacity = function(layerId, value, timeline = "no", paint_pro
     }else{
         if (layerId.indexOf(',') !== -1) {
             let layer_ids = layerId.split(',');
-            let paint_property_names = layer_paint_opacity_names.split(',');
+            let paint_property_names = paint_property_name.split(',');
             for (var i = 0; i < layer_ids.length; i++) {
                 window._mintMap.map.setPaintProperty(layer_ids[i], paint_property_names[i], parseInt(value, 10) / 100);
             }
