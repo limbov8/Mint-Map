@@ -52,7 +52,7 @@ var mapboxInspectToolkit = {
                 let current_property_name = window._mintMap.geojson_dot_map_layers_need_special_attention_for_inspection[layerName];
                 var modeValue = self.getMode(getModeForEachLayer[layerName][current_property_name]);
                 if (modeValue!=null) {
-                     oneLayerElement.push(layerElement + self.renderProperty(current_property_name, modeValue));
+                     oneLayerElement.push(self.renderProperty(current_property_name, modeValue));
                 }
             }else{
                 Object.keys(getModeForEachLayer[layerName]).map(function (propertyName) {

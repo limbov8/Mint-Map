@@ -390,7 +390,7 @@ function loadSingleGeojsonLayer(json) {
         json.geojson_paint_settings = [paint_settings];
         json.geojson_layer_types = [pl_type.layer_type];
         json.geojson_layer_paint_types = [pl_type.paint_type];
-        json.geojson_filter_types = [filter_types];
+        json.geojson_filter_types = [pl_type.filter_type];
         json.geojson_paint_opacity_property_names = [pl_type.opacity_name];
         json.geojson_vector_layer_ids = []
 
@@ -439,7 +439,7 @@ function get_paint_type_and_layer_type(colormap) {
         vector_layer_type = '_line';
         filter_type = window._mintMap.vector_layer_filter_types[1]
         opacity_name = window._mintMap.vector_layer_opacity_names[1]
-    }else if (colormap.indexof('fill-') !== -1) {
+    }else if (colormap.indexOf('fill-') !== -1) {
         paint_type = 'fill';
         vector_layer_type = '_polygon';
         filter_type = window._mintMap.vector_layer_filter_types[2]
@@ -619,10 +619,10 @@ function loadTilesOfTimeline(json) {
         let colormap = i < json.colormap.length ? json.colormap[i] : json.colormap[0];
         window._mintMap.map.setPaintProperty(vectorMapboxLayerId, 'fill-color', JSON.parse(colormap));
     }
-    
     setLoadingIndicator(json.layerId, false);
 }
-function playTimeseries(layerId) {
+function playTimeseries(json) {
+    let layerId = json.layerId;
     window._mintMap.sliderData[layerId].intervalHandle = setInterval(function () {
         let ele = window._polymerMap.querySelector("#property-slider-" + layerId);
         let pointer = parseInt(ele.noUiSlider.get());
@@ -630,7 +630,12 @@ function playTimeseries(layerId) {
         let curIdx = list.indexOf(pointer);
         let nextIdx = (curIdx + 1) % list.length;
         ele.noUiSlider.set(list[nextIdx]);
-    }, parseInt(process.env.ANIMATION_FRAME_INTERVAL))
+    }, parseInt(
+            isGeoJSONLayer(json) 
+            ? process.env.GEOJSON_ANIMATION_FRAME_INTERVAL 
+            : process.env.ANIMATION_FRAME_INTERVAL
+        )
+    )
 }
 function pauseTimeseries(layerId) {
     if (window._mintMap.sliderData[layerId]) {
@@ -692,7 +697,7 @@ function setupSlider(panelId) {
         }else{
             alink.innerHTML = PAUSE_BTN_IMG;
             window._mintMap.sliderData[panelId].playing = true;
-            playTimeseries(panelId);
+            playTimeseries(json);
         }
 
         return false;
@@ -719,6 +724,7 @@ function setupSlider(panelId) {
         var vectorMapboxLayerId = curLayerName + '_vector';
         var rasterMapboxLayerId = curLayerName + '_raster';
 
+        updateTimeLabel(json.layerId, step);
         // Handle geojson Setup noUiSlider
         if (isGeoJSONLayer(json)) {
             // dot map value/interpolation
@@ -746,7 +752,7 @@ function setupSlider(panelId) {
 
             // for the future scalability
             for (var gid = 0; gid < geojson_vector_layer_ids.length; gid++) {
-                for(k in paint_settings){
+                for(let k in paint_settings){
                     window._mintMap.map.setPaintProperty(geojson_vector_layer_ids[gid], k, paint_settings[k]);
                 }
             }
@@ -755,7 +761,7 @@ function setupSlider(panelId) {
         // handle double layer slider
         let legend = vindex < json.legend.length ? json.legend[vindex] : json.legend[0]; 
         updateLegend(json['legend-type'], JSON.parse(legend), json.sourceLayer, json.title, json.layerId, vindex);
-        updateTimeLabel(json.layerId, step);
+        
         // if data-time is no, then the opacity will alway the first one layer
         ele.parentElement.parentElement.querySelector('.opacity-slider').setAttribute('data-time', vindex);
         if (step === layerOptions.step[0]) {

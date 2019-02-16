@@ -13,6 +13,6 @@ module.exports = {
     new Dotenv(),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ],
-  mode: 'development'
-  // mode: 'production'
+  // mode: 'development'
+  mode: 'production'
 };
