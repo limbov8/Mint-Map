@@ -159,7 +159,7 @@ function addNewLayerToMap(json) {
     var tagul = _mintMapShadowRoot.querySelector('#the-ul-of-layer-list');
     var tagSearch = _mintMapShadowRoot.querySelector('#the-li-of-add-new-layer');
     tagul.insertBefore(newLayer, tagSearch);
-    if (isGeoJSONLayer()) {
+    if (isGeoJSONLayer(json)) {
         loadGeoJSONLayerFromJson(json);
     }else{
         loadLayerFromJson(json);
