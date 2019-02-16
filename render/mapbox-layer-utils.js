@@ -316,8 +316,8 @@ function loadLayerFromJson(json) {
 
 function loadSingleGeojsonLayer(json) {
     let tile_path = window._mintMap.metadata.tiles;
-    // let server = window._mintMap.metadata.server;
-    let server = "http://[::]:8080/data/"; //for test
+    let server = window._mintMap.metadata.server;
+    // let server = "http://[::]:8080/data/"; //for test
     let vectorMD5 = json.md5vector;
     
     let layerId = json.layerId;
@@ -449,8 +449,8 @@ function get_paint_type_and_layer_type(colormap) {
 }
 function loadSingleLayer(json) {
     let tile_path = window._mintMap.metadata.tiles;
-    // let server = window._mintMap.metadata.server;
-    let server = "http://[::]:8080/data/"; //for test
+    let server = window._mintMap.metadata.server;
+    // let server = "http://[::]:8080/data/"; //for test
     let vectorMD5 = json.md5vector;
     let rasterMD5 = json.md5raster;
 
@@ -539,8 +539,8 @@ function loadTilesOfTimeline(json) {
         console.error("There are only one time stamp in the Timeseries");
         return;
     }
-    // let server = window._mintMap.metadata.server;
-    let server = "http://[::]:8080/data/"; //for test
+    let server = window._mintMap.metadata.server;
+    // let server = "http://[::]:8080/data/"; //for test
     // let server = 'http://mintviz.org:65530/'; // for test
     let tile_path = window._mintMap.metadata.tiles;
     for (var i = 1; i < json.layers.step.length; i++) {
