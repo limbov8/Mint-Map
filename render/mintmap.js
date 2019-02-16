@@ -74,7 +74,14 @@ window._mintMap.setOpacity = function(layerId, value, timeline = "no", paint_pro
                 window._mintMap.map.setPaintProperty(layer_ids[i], paint_property_names[i], parseInt(value, 10) / 100);
             }
         }else{
-            window._mintMap.map.setPaintProperty(layerId, paint_property_name, parseInt(value, 10) / 100);    
+            if (paint_property_name.indexOf(',') !== -1) {
+                let paint_property_names = paint_property_name.split(',');
+                for (var i = 0; i < paint_property_names.length; i++) {
+                    window._mintMap.map.setPaintProperty(layerId, paint_property_names[i], parseInt(value, 10) / 100);
+                }
+            }else{
+                window._mintMap.map.setPaintProperty(layerId, paint_property_name, parseInt(value, 10) / 100);    
+            }
         }
         
     }

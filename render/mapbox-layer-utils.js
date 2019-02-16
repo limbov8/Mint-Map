@@ -394,6 +394,9 @@ function loadSingleGeojsonLayer(json) {
         json.geojson_layer_paint_types = [pl_type.paint_type];
         json.geojson_filter_types = [pl_type.filter_type];
         json.geojson_paint_opacity_property_names = [pl_type.opacity_name];
+        if (pl_type.opacity_name === 'circle-opacity') {
+            json.geojson_paint_opacity_property_names.push('circle-stroke-opacity')
+        }
         json.geojson_vector_layer_ids = []
 
         let vector_type = vectorMapboxLayerId + pl_type.layer_type;
@@ -748,6 +751,7 @@ function setupSlider(panelId) {
             paint_settings['circle-stroke-width'][3][1][1] = dm_interpo;
             // 'circle-opacity':0.8
             paint_settings['circle-opacity'] = parseInt(currentOpacity, 10) / 100;
+            paint_settings['circle-stroke-opacity'] = parseInt(currentOpacity, 10) / 100;
             // TODO: opacity vector...
             // 'circle-radius':['interpolate',['linear'],['get','v_0'],0,2,46,20]}
             paint_settings['circle-radius'][2][1] = dm_value;
