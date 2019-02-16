@@ -318,7 +318,8 @@ function loadLayerFromJson(json) {
 
 function loadSingleGeojsonLayer(json) {
     let tile_path = window._mintMap.metadata.tiles;
-    let server = window._mintMap.metadata.server;
+    // let server = window._mintMap.metadata.server;
+    let server = "http://http://[::]:8080/data"; //for test
     let vectorMD5 = json.md5vector;
     
     let layerId = json.layerId;
@@ -332,8 +333,8 @@ function loadSingleGeojsonLayer(json) {
         window._mintMap.map.addSource(vectorServerSourceId,{
             type: 'vector',
             tiles: [server + vectorMD5 + tile_path + '.pbf'],
-            minzoom: 3,
-            maxzoom: 7
+            minzoom: json.minzoom,
+            maxzoom: json.maxzoom
         });
     }
     // Scalability
@@ -444,8 +445,8 @@ function get_paint_type_and_layer_type(colormap) {
 }
 function loadSingleLayer(json) {
     let tile_path = window._mintMap.metadata.tiles;
-    let server = window._mintMap.metadata.server;
-    // let server = "http://mintviz.org:65530/"; //for test
+    // let server = window._mintMap.metadata.server;
+    let server = "http://http://[::]:8080/data"; //for test
     let vectorMD5 = json.md5vector;
     let rasterMD5 = json.md5raster;
 
